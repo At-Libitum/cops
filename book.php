@@ -673,11 +673,6 @@ function getJson ($complete = false) {
     $database = GetUrlParam (DB);
 
     if ($search) {
-        // Typeahead search moved to base.php to get integrated with submit search.
-        // -1 for lack of an available ID and because I need a way to signal search type.
-        $currentPage = Page::getPage (Base::PAGE_OPENSEARCH_QUERY, -1, $query, 0);
-        return $currentPage->initializeContent ();
-/* original code commented out and left in to make it easier comparing diffs agains original COPS
         $out = array ();
         $pagequery = Base::PAGE_OPENSEARCH_QUERY;
         $dbArray = array ("");
@@ -756,8 +751,8 @@ function getJson ($complete = false) {
             }
         }
         return $out;
-*/
     }
+
     $currentPage = Page::getPage ($page, $qid, $query, $n);
     $currentPage->InitializeContent ();
 

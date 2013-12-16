@@ -532,7 +532,7 @@ class PageAllAuthors extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("authorword.title");
+        $this->title = localize("authors.title");
         if (getCurrentOption ("author_split_first_letter") == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();
         }
@@ -568,7 +568,7 @@ class PageAllPublishers extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("publisherword.title");
+        $this->title = localize("publisher.title");
         $this->entryArray = Publisher::getAllPublishers();
         $this->idPage = Publisher::ALL_PUBLISHERS_ID;
     }
@@ -589,7 +589,7 @@ class PageAllTags extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("tagword.title");
+        $this->title = localize("tags.title");
         $this->entryArray = Tag::getAllTags();
         $this->idPage = Tag::ALL_TAGS_ID;
     }
@@ -654,7 +654,7 @@ class PageAllSeries extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("seriesword.title");
+        $this->title = localize("series.title");
         $this->entryArray = Serie::getAllSeries();
         $this->idPage = Serie::ALL_SERIES_ID;
     }
@@ -757,12 +757,12 @@ class PageQueryResult extends Page
                 Base::clearDb ();
                 $nBooks = Book::getBookCount ($d);
                 // needs safeguarding for empty db
-                if ($nBooks > 0) {
-// consider refactoring getBooksByQuery into this class and make it a separate Search class?
-                list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $d, 1);
-                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$d}",
-                            str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
-                            array ( new LinkNavigation ("?db={$d}&page={$pagequery}&query=" . $this->query))));
+                if ($nBooks > 0) { 
+// consider refactoring getBooksByQuery into this class and make it a separate Search class
+                    list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $d, 1);
+                    array_push ($this->entryArray, new Entry ($key, DB . ":query:{$d}",
+                                str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
+                                array ( new LinkNavigation ("?db={$d}&page={$pagequery}&query=" . $this->query))));
                 }
                 $d++;
             }
@@ -788,7 +788,7 @@ class PageQueryResult extends Page
                 break;
 // across categories search
             default: // last argument - TRUE controls submit format data returned
-                $this->entryArray = self::executeSearch($pagequery, $this->query, getURLParam (DB), true);
+                $this->entryArray = self::executeSearch($pagequery, $this->query, $d, true);
         }
     }
 
@@ -799,7 +799,7 @@ class PageQueryResult extends Page
             // clear whichever may be the current library if multi-library searching
             Base::clearDb();
         }
-        // otherwise use the current database.
+        // otherwise use the current library.
         $searchdb = null;
         $nBooks = 0;
         $searchdb = Base::getDb($database);
@@ -807,7 +807,7 @@ class PageQueryResult extends Page
         if (!is_null ($searchdb)) {
             $nBooks = Book::getBookCount ($database);
         }
-        elseif ((is_null ($searchdb)) || (($nBooks == 0) && ($config["cops_show_empty"] == "0")))
+        elseif ((is_null ($searchdb)) || ($nBooks == 0))
         {   // safeguard against empty (if not wanting to show), non-existing or off-line database
             return array (-1, 0, 0, 0, 0, 0);
         }
@@ -848,7 +848,6 @@ class PageQueryResult extends Page
     // to all other localization files to not inconvenience the translators. Left behind {$key}.title
     // entries that were no longer referenced as a result of the refactoring, have been removed.
     public function executeSearch($pagequery, $query, $database, $submitted = FALSE) {
-        global $config;
 
         $havedb = true;
         $dbCount = 1;
@@ -862,7 +861,7 @@ class PageQueryResult extends Page
             $dbArray = Base::getDbNameList ();
             $d = 0;
             $havedb = false;
-            $dbCount = count($config['calibre_directory']);
+            $dbCount = count ($dbArray);
         }
 
         foreach ($dbArray as $dbkey) {

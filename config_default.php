@@ -229,6 +229,12 @@
     $config['cops_thumbnail_handling'] = "";
 
     /*
+     * Sometimes a thumbnail goes missing, instead of the transparant fallback you can specify a replacement
+     * cover here. Note, the image must exist in the images folder of the selected template.
+     */
+    $config['cops_nocover_image'] = "bookcover_missing.png";
+
+    /*
      * Contains a list of user agent for browsers not compatible with client side rendering
      * For now : Kindle, Sony PRS-T1, Sony PRS-T2, All Cybook devices (maybe a little extreme).
      * This item is used as regular expression so "." will force server side rendering for all devices
@@ -250,9 +256,9 @@
     /*
      * If you use a Sony eReader or Aldiko you can't download ebooks if your catalog
      * is password protected. A simple workaround is to leave fetch.php not protected (see .htaccess).
-     * But In that case your COPS installation is not completely safe. 
+     * But In that case your COPS installation is not completely safe.
      * Setting this parameter to "1" ensure that nobody can access fetch.php before accessing
-     * index.php or feed.php first. 
+     * index.php or feed.php first.
      * BEWARE : Do not touch this if you're not using password, not using PRS-TX or not using Aldiko.
      */
     $config ['cops_fetch_protect'] = "0";

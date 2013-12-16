@@ -11,6 +11,7 @@
     <article>
         <div class="frontpage">
             {{? entry.navlink != "#"}}<a href="{{=entry.navlink}}">{{?}}
+            {{? entry.caticon != "#"}}<div class="caticon"><img src="{{=entry.caticon}}" /></div>{{?}}
                 <h2>{{=htmlspecialchars (entry.title)}}</h2>
                 <h4>{{=entry.content}}</h4> 
             {{? entry.navlink != "#"}}</a>{{?}}
@@ -23,6 +24,8 @@
                 <a class="fancycover" href="{{=str_format (it.c.url.coverUrl, entry.book.id, it.databaseId)}}">
                     <img src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
                 </a>
+            {{??}}
+                <img src="{{=it.c.url.defaultCover}}" alt="{{=it.c.i18n.coverAlt}}" />
             {{?}}
             </span>
             <h2 class="download">

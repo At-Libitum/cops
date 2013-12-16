@@ -83,12 +83,12 @@
 
             var url = "<?php echo "getJSON.php?" . addURLParameter (getQueryString (), "complete", 1); ?>";
 
-            $.when($.get('templates/default/header.html'),
-                   $.get('templates/default/footer.html'),
-                   $.get('templates/default/bookdetail.html'),
-                   $.get('templates/default/main.html'),
-                   $.get('templates/default/page.html'),
-                   $.get('templates/default/suggestion.html'),
+            $.when($.get('templates/<?php echo $config["cops_template"] ?>/header.html'),
+                   $.get('templates/<?php echo $config["cops_template"] ?>/footer.html'),
+                   $.get('templates/<?php echo $config["cops_template"] ?>/bookdetail.html'),
+                   $.get('templates/<?php echo $config["cops_template"] ?>/main.html'),
+                   $.get('templates/<?php echo $config["cops_template"] ?>/page.html'),
+                   $.get('templates/<?php echo $config["cops_template"] ?>/suggestion.html'),
                    $.getJSON(url)).done(function(header, footer, bookdetail, main, page, suggestion, data){
                 templateBookDetail = doT.template (bookdetail [0]);
 
@@ -130,11 +130,11 @@
 <?php
 if (useServerSideRendering ()) {
     // Get the templates
-    $header = file_get_contents('templates/default/header.html');
-    $footer = file_get_contents('templates/default/footer.html');
-    $main = file_get_contents('templates/default/main.html');
-    $bookdetail = file_get_contents('templates/default/bookdetail.html');
-    $page = file_get_contents('templates/default/page.html');
+    $header = file_get_contents('templates/' . $config["cops_template"] . '/header.html');
+    $footer = file_get_contents('templates/' . $config["cops_template"] . '/footer.html');
+    $main = file_get_contents('templates/' . $config["cops_template"] . '/main.html');
+    $bookdetail = file_get_contents('templates/' . $config["cops_template"] . '/bookdetail.html');
+    $page = file_get_contents('templates/' . $config["cops_template"] . '/page.html');
 
     // Get the data
     $data = getJson (true);

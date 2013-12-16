@@ -4,6 +4,8 @@
         <a href="{{=it.book.coverurl}}">
           <img src="{{=it.book.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
         </a>
+        {{??}}
+        <img src="{{=it.c.url.defaultCover}}" alt="{{=it.c.i18n.coverAlt}}" />
         {{?}}
     </span>
     <h2 class="download">

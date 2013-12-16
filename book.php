@@ -808,16 +808,18 @@ function getJson ($complete = false) {
                    "url" => array (
                        "detailUrl" => "index.php?page=13&id={0}&db={1}",
                        "coverUrl" => "fetch.php?id={0}&db={1}",
-                       "thumbnailUrl" => "fetch.php?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"),
+                       "thumbnailUrl" => "fetch.php?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}",
+                       "defaultCover" => "images/" . getCurrentOption ("template") . "/" . getCurrentOption ("nocover_image")),
                    "config" => array (
                        "use_fancyapps" => $config ["cops_use_fancyapps"],
                        "max_item_per_page" => $config['cops_max_item_per_page'],
                        "server_side_rendering" => useServerSideRendering (),
-                       "html_tag_filter" => $config['cops_html_tag_filter']));
+                       "html_tag_filter" => $config['cops_html_tag_filter'],
+                       "html_template" => getCurrentOption ("template") ));
         if ($config['cops_thumbnail_handling'] == "1") {
             $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
         } else if (!empty ($config['cops_thumbnail_handling'])) {
-            $out ["c"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
+            $out ["c"]["url"]["thumbnailUrl"] = "images/" . getCurrentOption ("template") . $config['cops_thumbnail_handling'];
         }
    }
 

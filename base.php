@@ -35,8 +35,21 @@ function getCurrentOption ($option) {
     if (isset($_COOKIE[$option])) {
         return $_COOKIE[$option];
     }
+/* allow setting a default style in config if no cookie present yet.
     if ($option == "style") {
         return "default";
+    }
+*/
+// allow url argument to override configured setting for icon set in OPDS feed
+    if ($option == "template") {
+        $template = getURLParam ("template", NULL);
+        if (!is_null ($template)) {
+            return $template;
+        }
+        else {
+            return $config ["cops_template"];
+        }
+
     }
 
     if (isset($config ["cops_" . $option])) {
@@ -47,7 +60,8 @@ function getCurrentOption ($option) {
 }
 
 function getCurrentCss () {
-    return "styles/style-" . getCurrentOption ("style") . ".css";
+    //link to available styles from selected template
+    return "styles/" . getCurrentOption ("template") . "/style-" . getCurrentOption ("style") . ".css";
 }
 
 function getUrlWithVersion ($url) {
@@ -250,7 +264,8 @@ class LinkNavigation extends Link
 {
     public function __construct($phref, $prel = NULL, $ptitle = NULL) {
         parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
-        if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
+        if (!is_null (getURLParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
+        if (!is_null (getURLParam ("template"))) $this->href = addURLParameter ($this->href, "template", GetUrlParam ("template"));
         if (!preg_match ("#^\?(.*)#", $this->href) && !empty ($this->href)) $this->href = "?" . $this->href;
         if (preg_match ("/(bookdetail|getJSON).php/", $_SERVER["SCRIPT_NAME"])) {
             $this->href = "index.php" . $this->href;
@@ -276,19 +291,23 @@ class Entry
     public $content;
     public $contentType;
     public $linkArray;
+    public $template;
+    public $caticon;
     public $localUpdated;
     private static $updated = NULL;
 
     public static $icons = array(
-        Author::ALL_AUTHORS_ID       => 'images/author.png',
-        Serie::ALL_SERIES_ID         => 'images/serie.png',
-        Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
-        Tag::ALL_TAGS_ID             => 'images/tag.png',
-        Language::ALL_LANGUAGES_ID   => 'images/language.png',
-        CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
-        "cops:books$"             => 'images/allbook.png',
-        "cops:books:letter"       => 'images/allbook.png',
-        Publisher::ALL_PUBLISHERS_ID => 'images/publisher.png'
+        ":catalog"                   => 'library.png',
+        ":query"                     => 'library.png',
+        Author::ALL_AUTHORS_ID       => 'author.png',
+        Serie::ALL_SERIES_ID         => 'serie.png',
+        Book::ALL_RECENT_BOOKS_ID    => 'recent.png',
+        Tag::ALL_TAGS_ID             => 'tag.png',
+        Language::ALL_LANGUAGES_ID   => 'language.png',
+        CustomColumn::ALL_CUSTOMS_ID => 'tag.png',
+        "cops:books$"             => 'allbook.png',
+        "cops:books:letter"       => 'allbook.png',
+        Publisher::ALL_PUBLISHERS_ID => 'publisher.png'
     );
 
     public function getUpdatedTime () {
@@ -311,7 +330,7 @@ class Entry
     }
 
     public function getContentArray () {
-        return array ( "title" => $this->title, "content" => $this->content, "navlink" => $this->getNavLink () );
+        return array ( "title" => $this->title, "content" => $this->content, "navlink" => $this->getNavLink () , "caticon" => $this->caticon );
     }
 
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray) {
@@ -321,14 +340,19 @@ class Entry
         $this->content = $pcontent;
         $this->contentType = $pcontentType;
         $this->linkArray = $plinkArray;
+        $this->caticon = "#";
+        $this->template = getCurrentOption ("template") . "/";
 
-        if ($config['cops_show_icons'] == 1)
+        if ((getCurrentOption ("show_icons") == 1) || (getCurrentOption ("show_icons_html") == 1))
         {
             foreach (self::$icons as $reg => $image)
             {
                 if (preg_match ("/" . $reg . "/", $pid)) {
-                    array_push ($this->linkArray, new Link (getUrlWithVersion ($image), "image/png", Link::OPDS_THUMBNAIL_TYPE));
+                    $iconlink = new Link (getUrlWithVersion ("images/" . $this->template . $image), "image/png", Link::OPDS_THUMBNAIL_TYPE);
+                    if (getCurrentOption ("show_icons_html")) $this->caticon = $iconlink->href;
+                    if (getCurrentOption ("show_icons")) array_push ($this->linkArray, $iconlink );
                     break;
+
                 }
             }
         }
@@ -381,6 +405,7 @@ class Page
     public $idGet;
     public $query;
     public $favicon;
+    public $caticon;
     public $n;
     public $book;
     public $totalNumber = -1;
@@ -459,7 +484,7 @@ class Page
                 $nBooks = Book::getBookCount ($i);
                 array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
                                         str_format (localize ("bookword", $nBooks), $nBooks), "text",
-                                        array ( new LinkNavigation ("?" . DB . "={$i}"))));
+                                array ( new LinkNavigation ("?" . DB . "={$i}")), $this->caticon ) );
                 $i++;
                 Base::clearDb ();
             }
@@ -744,7 +769,7 @@ class PageQueryResult extends Page
                 list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, 1);
                 array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}",
                                         str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
-                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
+                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query, $this->caticon))));
                 $i++;
             }
             return;
@@ -811,8 +836,8 @@ class PageCustomize extends Page
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '<select id="style" onchange="updateCookie (this);">';
         }
-            foreach (glob ("styles/style-*.css") as $filename) {
-                if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
+            foreach (glob ("styles/" . getCurrentOption ("template"). "/style-*.css") as $filename) {
+                if (preg_match ('/styles\/' . getCurrentOption ("template") . '\/style-(.*?)\.css/', $filename, $m)) {
                     $filename = $m [1];
                 }
                 $selected = "";
@@ -890,7 +915,7 @@ abstract class Base
         global $config;
         return is_array ($config['calibre_directory']);
     }
-    
+
     public static function noDatabaseSelected () {
         return self::isMultipleDatabaseEnabled () && is_null (GetUrlParam (DB));
     }
@@ -903,7 +928,7 @@ abstract class Base
             return array ("" => $config['calibre_directory']);
         }
     }
-    
+
     public static function getDbNameList () {
         global $config;
         if (self::isMultipleDatabaseEnabled ()) {
@@ -959,7 +984,7 @@ abstract class Base
         }
         return self::$db;
     }
-    
+
     public static function checkDatabaseAvailability () {
         if (self::noDatabaseSelected ()) {
             for ($i = 0; $i < count (self::getDbList ()); $i++) {

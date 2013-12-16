@@ -532,7 +532,7 @@ class PageAllAuthors extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("authors.title");
+        $this->title = localize("authorword.title");
         if (getCurrentOption ("author_split_first_letter") == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();
         }
@@ -568,7 +568,7 @@ class PageAllPublishers extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("publisher.title");
+        $this->title = localize("publisherword.title");
         $this->entryArray = Publisher::getAllPublishers();
         $this->idPage = Publisher::ALL_PUBLISHERS_ID;
     }
@@ -589,7 +589,7 @@ class PageAllTags extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("tags.title");
+        $this->title = localize("tagword.title");
         $this->entryArray = Tag::getAllTags();
         $this->idPage = Tag::ALL_TAGS_ID;
     }
@@ -654,7 +654,7 @@ class PageAllSeries extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("series.title");
+        $this->title = localize("seriesword.title");
         $this->entryArray = Serie::getAllSeries();
         $this->idPage = Serie::ALL_SERIES_ID;
     }
@@ -721,6 +721,14 @@ class PageQueryResult extends Page
 
     public function InitializeContent ()
     {
+        $pagequery = Base::PAGE_OPENSEARCH_QUERY;
+        $database = getURLParam (DB);
+
+        if ($this->idGet == -1) { // last argument - FALSE controls typeahead format data returned
+            $this->entryArray = self::executeSearch($pagequery, $this->query, $database, false);
+            return $this->entryArray;
+        }
+
         $scope = getURLParam ("scope");
         if (empty ($scope)) {
             $this->title = str_format (localize ("search.result"), $this->query);
@@ -734,21 +742,33 @@ class PageQueryResult extends Page
             $this->title = str_format (localize ("search.result.{$scope}"), $this->query);
         }
 
+// across libraries search
         $crit = "%" . $this->query . "%";
 
-        // Special case when we are doing a search and no database is selected
+        $dbArray = array ("");
+        $d = $database; 
+
+        // Special case when no databases were chosen, we search on all databases
         if (Base::noDatabaseSelected ()) {
-            $i = 0;
-            foreach (Base::getDbNameList () as $key) {
+            $dbArray = Base::getDbNameList ();
+            $d = 0;
+
+            foreach ($dbArray as $key) {
                 Base::clearDb ();
-                list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, 1);
-                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}",
-                                        str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
-                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
-                $i++;
+                $nBooks = Book::getBookCount ($d);
+                // needs safeguarding for empty db
+                if ($nBooks > 0) {
+// consider refactoring getBooksByQuery into this class and make it a separate Search class?
+                list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $d, 1);
+                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$d}",
+                            str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
+                            array ( new LinkNavigation ("?db={$d}&page={$pagequery}&query=" . $this->query))));
+                }
+                $d++;
             }
             return;
         }
+// single category search
         switch ($scope) {
             case self::SCOPE_AUTHOR :
                 $this->entryArray = Author::getAuthorsByStartingLetter ('%' . $this->query);
@@ -766,10 +786,157 @@ class PageQueryResult extends Page
             case self::SCOPE_PUBLISHER :
                 $this->entryArray = Publisher::getAllPublishersByQuery ($this->query);
                 break;
-            default:
-                list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
-                    array ("all" => $crit), $this->n);
+// across categories search
+            default: // last argument - TRUE controls submit format data returned
+                $this->entryArray = self::executeSearch($pagequery, $this->query, getURLParam (DB), true);
         }
+    }
+
+    private function doSearch ($query, $database) {
+        global $config;
+
+        if (Base::noDatabaseSelected ()) {
+            // clear whichever may be the current library if multi-library searching
+            Base::clearDb();
+        }
+        // otherwise use the current database.
+        $searchdb = null;
+        $nBooks = 0;
+        $searchdb = Base::getDb($database);
+        // in case we get an error in the db, but then we're likely not getting this far.
+        if (!is_null ($searchdb)) {
+            $nBooks = Book::getBookCount ($database);
+        }
+        elseif ((is_null ($searchdb)) || (($nBooks == 0) && ($config["cops_show_empty"] == "0")))
+        {   // safeguard against empty (if not wanting to show), non-existing or off-line database
+            return array (-1, 0, 0, 0, 0, 0);
+        }
+
+        if (!in_array ("book", $config ['cops_ignored_search_scope'])) {
+            $arrayBook = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
+        }
+        if (!in_array ("author", $config ['cops_ignored_search_scope'])) {
+            $arrayAuthor = Author::getAuthorsByStartingLetter ('%' . $query);
+        }
+        if (!in_array ("series", $config ['cops_ignored_search_scope'])) {
+            $arraySeries = Serie::getAllSeriesByQuery ($query);
+        }
+        if (!in_array ("tag", $config ['cops_ignored_search_scope'])) {
+            $arrayTag = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
+        }
+        if (!in_array ("publisher", $config ['cops_ignored_search_scope'])) {
+            $arrayPublisher = Publisher::getAllPublishersByQuery ($query);
+        }
+        $overalTotal = ((count ($arrayBook) == 2 && is_array ($arrayBook[0])) ? $arrayBook[1] : 0)
+                     + count ($arrayAuthor)
+                     + count ($arraySeries)
+                     + ((count ($arrayTag) == 2 && is_array ($arrayTag[0])) ? $arrayTag[1] : 0)
+                     + count ($arrayPublisher);
+
+        return array ($overalTotal, $arrayBook, $arrayAuthor, $arraySeries, $arrayTag, $arrayPublisher);
+    }
+
+    // executeSearch replaces the typeahead search, formerly part of the Book::getJson function
+    // and now also executes submitted searches on library or category selection screens.
+    // the state of $submitted determines if the results are returned as dropdown search results
+    // this does currently mean that if enter is pressed immediately, it executes twice in a row
+    // but since both methods have too much common code, splitting would cause too much redundency
+    // Another thing is, wanting to use {$key}word.title, I noticed that not every category had one.
+    // Those without one did however had a regular title, and some had both with identical values.
+    // So, rather than adding new ones, I decided to refactor the existing {&key}.title entries
+    // into {$key}word.title entries if such entry did not exist. This rename was rippled through
+    // to all other localization files to not inconvenience the translators. Left behind {$key}.title
+    // entries that were no longer referenced as a result of the refactoring, have been removed.
+    public function executeSearch($pagequery, $query, $database, $submitted = FALSE) {
+        global $config;
+
+        $havedb = true;
+        $dbCount = 1;
+        $entryArray = array ();
+
+        $dbArray = array ("");
+        $d = $database; 
+
+        // Special case when no databases were chosen, we search on all databases
+        if (Base::noDatabaseSelected ()) {
+            $dbArray = Base::getDbNameList ();
+            $d = 0;
+            $havedb = false;
+            $dbCount = count($config['calibre_directory']);
+        }
+
+        foreach ($dbArray as $dbkey) {
+
+            $overalTotal = self::doSearch ($query, $d);
+            // only if there's something to process
+            if (is_array ($overalTotal) && $overalTotal[0] > 0) {
+
+                if (!$submitted && !$havedb) {
+                   array_push ($entryArray, array ("class" => "tt-header",
+                                                   "title" => $dbkey . " (" . $overalTotal[0] . ")",
+                                                   "navlink" => "getJSON.php?page={$pagequery}&current=index&query={$query}&db={$d}"));
+                }
+
+                foreach (array ("book" => $overalTotal[1],
+                                "author" => $overalTotal[2],
+                                "series" => $overalTotal[3],
+                                "tag" => $overalTotal[4],
+                                "publisher" => $overalTotal[5]) as $key => $array) {
+
+                    // array for use in submitted search
+                    $pages = array(
+                                "book" => Book::ALL_BOOKS_ID,
+                                "author" => Author::ALL_AUTHORS_ID,
+                                "series" => Serie::ALL_SERIES_ID,
+                                "tag" =>  Tag::ALL_TAGS_ID,
+                                "publisher" => Publisher::ALL_PUBLISHERS_ID);
+
+                    $i = 0;
+                    if (count ($array) == 2 && is_array ($array [0])) {
+                        $total = $array [1];
+                        $array = $array [0];
+                    } else {
+                        $total = count ($array);
+                    }
+                    if ($total > 0) {
+                        // Comment to help the perl i18n script
+                        // str_format (localize("bookword", count($array))
+                        // str_format (localize("authorword", count($array))
+                        // str_format (localize("seriesword", count($array))
+                        // str_format (localize("tagword", count($array))
+                        // str_format (localize("publisherword", count($array))
+                        if ($submitted) {
+                            array_push ($entryArray, new Entry (localize ("{$key}word.title"), $pages[$key],
+                                        str_format (localize ("{$key}word", $total), $total), "text",
+                                        array ( new LinkNavigation ("?page={$pagequery}&query={$query}&db={$d}&scope={$key}"))));
+                        }
+                        else
+                        {
+                            array_push ($entryArray, array ("class" => ($havedb) ? "tt-header" : "tt-text",
+                                        "title" => str_format (localize("{$key}word", $total), $total),
+                                        "navlink" => "index.php?page={$pagequery}&query={$query}&db={$d}&scope={$key}"));
+                        }
+                    }
+
+// okay, typeahead part of search limited to total counts per category on library selection page
+// so this part only executes within a library. So it never searches beyond the 'next' lower level.
+                    if (!$submitted && $havedb) {
+                        foreach ($array as $entry) {
+                            if ($entry instanceof EntryBook) {
+                                array_push ($entryArray, array ("class" => "tt-text", "title" => $entry->title, "navlink" => $entry->book->getDetailUrl () . "&db={$d}" ));
+                            } else {
+                                array_push ($entryArray, array ("class" => "tt-text", "title" => $entry->title, "navlink" => $entry->getNavLink () . "&db={$d}" ));
+                            }
+                            $i++;
+                            if ($i > 4) { break; }; // safeguard for category arrays.
+                        }
+                    }
+                }
+            }
+            $d++;
+            if ($d+1 > $dbCount) { break; }; // force loop break if bigger
+        }
+        return $entryArray;
     }
 }
 

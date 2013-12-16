@@ -484,7 +484,7 @@ class Page
                 $nBooks = Book::getBookCount ($i);
                 array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
                                         str_format (localize ("bookword", $nBooks), $nBooks), "text",
-                                array ( new LinkNavigation ("?" . DB . "={$i}")), $this->caticon ) );
+                                        array ( new LinkNavigation ("?" . DB . "={$i}")), $this->caticon ) );
                 $i++;
                 Base::clearDb ();
             }

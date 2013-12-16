@@ -819,7 +819,7 @@ function getJson ($complete = false) {
         if ($config['cops_thumbnail_handling'] == "1") {
             $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
         } else if (!empty ($config['cops_thumbnail_handling'])) {
-            $out ["c"]["url"]["thumbnailUrl"] = "images/" . getCurrentOption ("template") . $config['cops_thumbnail_handling'];
+            $out ["c"]["url"]["thumbnailUrl"] = "images/" . getCurrentOption ("template") . "/" . $config['cops_thumbnail_handling'];
         }
    }
 

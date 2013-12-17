@@ -559,7 +559,7 @@ class PageAuthorDetail extends Page
     {
         $author = Author::getAuthorById ($this->idGet);
         $this->idPage = $author->getEntryId ();
-        $this->title = $author->name;
+        $this->title = $author->sort;
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByAuthor ($this->idGet, $this->n);
     }
 }

@@ -673,6 +673,9 @@ function getJson ($complete = false) {
     $database = GetUrlParam (DB);
 
     if ($search) {
+        $currentPage = Page::getPage (Base::PAGE_OPENSEARCH_QUERY, -1, $query, 0);
+        return $currentPage->initializeContent ();
+/* original code commented out and left in to make it easier comparing diffs agains original COPS
         $out = array ();
         $pagequery = Base::PAGE_OPENSEARCH_QUERY;
         $dbArray = array ("");
@@ -751,6 +754,7 @@ function getJson ($complete = false) {
             }
         }
         return $out;
+*/
     }
 
     $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -788,10 +792,10 @@ function getJson ($complete = false) {
     if (!is_null (getURLParam ("complete")) || $complete) {
         $out ["c"] = array ("version" => VERSION, "i18n" => array (
                        "coverAlt" => localize("i18n.coversection"),
-                       "authorsTitle" => localize("authors.title"),
+                       "authorsTitle" => localize("authorword.title"),
                        "bookwordTitle" => localize("bookword.title"),
-                       "tagsTitle" => localize("tags.title"),
-                       "seriesTitle" => localize("series.title"),
+                       "tagsTitle" => localize("tagword.title"),
+                       "seriesTitle" => localize("seriesword.title"),
                        "customizeTitle" => localize ("customize.title"),
                        "aboutTitle" => localize ("about.title"),
                        "previousAlt" => localize ("paging.previous.alternate"),

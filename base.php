@@ -532,7 +532,7 @@ class PageAllAuthors extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("authors.title");
+        $this->title = localize("authorword.title");
         if (getCurrentOption ("author_split_first_letter") == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();
         }
@@ -568,7 +568,7 @@ class PageAllPublishers extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("publisher.title");
+        $this->title = localize("publisherword.title");
         $this->entryArray = Publisher::getAllPublishers();
         $this->idPage = Publisher::ALL_PUBLISHERS_ID;
     }
@@ -589,7 +589,7 @@ class PageAllTags extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("tags.title");
+        $this->title = localize("tagword.title");
         $this->entryArray = Tag::getAllTags();
         $this->idPage = Tag::ALL_TAGS_ID;
     }
@@ -654,7 +654,7 @@ class PageAllSeries extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("series.title");
+        $this->title = localize("seriesword.title");
         $this->entryArray = Serie::getAllSeries();
         $this->idPage = Serie::ALL_SERIES_ID;
     }

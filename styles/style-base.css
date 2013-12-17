@@ -109,6 +109,17 @@ padding:0;
 border:0;
 }
 
+/*
+titlesort	h2 span .oksort
+title		h2 span .nosort
+authorsort	div span .oksort
+authorname  div span .nosort
+*/
+
+h2 > .oksort,
+div > .nosort {
+    display:none;
+}
 /* =============================================================================
    Main container stuff goes here and other globals
    ========================================================================== */

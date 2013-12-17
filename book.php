@@ -12,7 +12,7 @@ require_once('author.php');
 require_once('publisher.php');
 require_once('tag.php');
 require_once('language.php');
-require_once("customcolumn.php");
+require_once('customcolumn.php');
 require_once('data.php');
 require_once('resources/php-epub-meta/epub.php');
 
@@ -49,7 +49,7 @@ class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
     const ALL_BOOKS_ID = "cops:books";
     const ALL_RECENT_BOOKS_ID = "cops:recentbooks";
-    const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating";
+    const BOOK_COLUMNS = "books.id as id, books.title as title, books.sort as titlesort, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating";
 
     const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
     const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
@@ -67,6 +67,7 @@ class Book extends Base {
 
     public $id;
     public $title;
+    public $titleSort;
     public $timestamp;
     public $pubdate;
     public $path;
@@ -88,6 +89,7 @@ class Book extends Base {
     public function __construct($line) {
         $this->id = $line->id;
         $this->title = $line->title;
+        $this->titleSort = $line->titlesort;
         $this->timestamp = strtotime ($line->timestamp);
         $this->pubdate = strtotime ($line->pubdate);
         $this->path = Base::getDbDirectory () . $line->path;
@@ -127,6 +129,7 @@ class Book extends Base {
                 array_push ($preferedData, array ("url" => $data->getHtmlLink (), "name" => $format));
             }
         }
+        $nameArray = $this->getAuthorNames ();
 
         $publisher = $this->getPublisher();
         if (is_null ($publisher)) {
@@ -158,12 +161,14 @@ class Book extends Base {
                       "publisherurl" => $pu,
                       "pubDate" => $this->getPubDate (),
                       "languagesName" => $this->getLanguages (),
-                      "authorsName" => $this->getAuthorsName (),
+                      "authorsName" => $nameArray[0],
+                      "authorsSort" => $nameArray[1],
                       "tagsName" => $this->getTagsName (),
                       "seriesName" => $sn,
                       "seriesIndex" => $this->seriesIndex,
                       "seriesCompleteName" => $scn,
-                      "seriesurl" => $su);
+                      "seriesurl" => $su,
+                      "titleSort" => $this->titleSort);
 
     }
     public function getFullContentArray () {
@@ -192,7 +197,6 @@ class Book extends Base {
             $link = new LinkNavigation ($tag->getUri ());
             array_push ($out ["tags"], array ("name" => $tag->name, "url" => $link->hrefXhtml ()));
         }
-        ;
         return $out;
     }
 
@@ -204,6 +208,9 @@ class Book extends Base {
 
     public function getTitle () {
         return $this->title;
+    }
+    public function getTitleSort () {
+        return $this->titleSort;
     }
 
     public function getAuthors () {
@@ -232,8 +239,10 @@ class Book extends Base {
         return "and " . $result;
     }
 
-    public function getAuthorsName () {
-        return implode (", ", array_map (function ($author) { return $author->name; }, $this->getAuthors ()));
+// return both forms in one call and use & as separator.
+    public function getAuthorNames () {
+        return array ( implode (" & ", array_map (function ($author) { return $author->name; }, $this->getAuthors ())),
+                       implode (" & ", array_map (function ($author) { return $author->sort; }, $this->getAuthors ())));
     }
 
     public function getPublisher () {
@@ -294,9 +303,9 @@ class Book extends Base {
 
             while ($post = $result->fetchObject ())
             {
-                array_push ($this->datas, new Data ($post, $this));
+                    array_push ($this->datas, new Data ($post, $this));
+                }
             }
-        }
         return $this->datas;
     }
 
@@ -415,6 +424,7 @@ class Book extends Base {
 
             $epub->Title ($this->title);
             $authorArray = array ();
+            // unlucky choice to use 'name' for the authorsort form.
             foreach ($this->getAuthors() as $author) {
                 $authorArray [$author->sort] = $author->name;
             }
@@ -608,11 +618,11 @@ where data.book = books.id and data.id = ?');
             }
             else {
                 if (array_key_exists ($key, $query)) {
-                    $critArray [$i] = $query [$key];
+                $critArray [$i] = $query [$key];
                 } else {
                     $critArray [$i] = $query ["all"];
-                }
             }
+                }
             $i++;
         }
         return self::getEntryArray (self::SQL_BOOKS_QUERY, $critArray, $n, $database, $numberPerPage);

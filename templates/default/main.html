@@ -32,11 +32,13 @@
             </h2>
             <a class="fancydetail" href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">
             <div class="fullclickpopup">
-                <h2><span class="st">{{=htmlspecialchars (entry.title)}}</span>
+                <h2><span class="nosort" title="{{=htmlspecialchars (entry.title)}}">{{=htmlspecialchars (entry.title)}}</span>
+                    <span class="oksort st" title="{{=htmlspecialchars (entry.book.titleSort)}}">{{=htmlspecialchars (entry.book.titleSort)}}</span>
                 {{? entry.book.pubDate != ""}}<span class="sp">({{=entry.book.pubDate}})</span>{{?}}
                 {{? entry.book.rating != ""}}<span class="sr">{{=entry.book.rating}}</span>{{?}}
                 </h2>
-                <h4>{{=it.c.i18n.authorsTitle}} : </h4><span class="sa">{{=htmlspecialchars (entry.book.authorsName)}}</span><br />
+                <h4>{{=it.c.i18n.authorsTitle}} : </h4><span class="nosort">{{=htmlspecialchars (entry.book.authorsName)}}</span>
+                        <span class="oksort sa">{{=htmlspecialchars (entry.book.authorsSort)}}</span><br />
                 {{? entry.book.tagsName != ""}}<h4>{{=it.c.i18n.tagsTitle}} : </h4><span class="se">{{=htmlspecialchars (entry.book.tagsName)}}</span><br />{{?}}
                 {{? entry.book.seriesName != ""}}<h4>{{=it.c.i18n.seriesTitle}} : </h4><span class="ss">{{=htmlspecialchars (entry.book.seriesName)}} ({{=entry.book.seriesIndex}})</span><br />{{?}}
             </div></a>

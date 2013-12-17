@@ -52,12 +52,12 @@ foreach (explode (";", $emailDest) as $emailAddress) {
     if (empty ($emailAddress)) { continue; }
     $mail->AddAddress($emailAddress);
 }
-
+$Authors = $book->getAuthorNames ();
 $mail->AddAttachment($data->getLocalPath ());
 
 $mail->IsHTML(true);
 $mail->Subject = 'Sent by COPS : ' . $data->getUpdatedFilename ();
-$mail->Body    = "<h1>" . $book->title . "</h1><h2>" . $book->getAuthorsName () . "</h2>" . $book->getComment ();
+$mail->Body    = "<h1>" . $book->title . "</h1><h2>" . $Authors[1] . "</h2>" . $book->getComment ();
 $mail->AltBody = "Sent by COPS";
 
 if (!$mail->Send()) {

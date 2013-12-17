@@ -38,6 +38,11 @@
     $config['cops_recentbooks_limit'] = '50';
 
     /*
+     * show recent books by date, overrides recentbooks limit if 1
+     */
+    $config['cops_show_recent_bydate'] = '0';
+
+    /*
      * Catalog's author name
      */
     $config['cops_author_name'] = "Sébastien Lucas";

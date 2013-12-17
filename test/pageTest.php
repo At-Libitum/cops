@@ -443,6 +443,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = NULL;
         $n = "1";
 
+        $config['cops_show_recent_bydate'] = 0;
+
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
@@ -450,6 +452,20 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (14, $currentPage->entryArray);
         $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
+
+        $page = Base::PAGE_ALL_RECENT_DATES;
+        $config['cops_show_recent_bydate'] = 1;
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
+        $this->assertEquals ("Recent additions", $currentPage->title);
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("Added on: 2012-04-11", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+
+        $page = Base::PAGE_ALL_RECENT_BOOKS;
+        $config['cops_show_recent_bydate'] = 0;
 
         // Test facets
 

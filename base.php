@@ -279,10 +279,14 @@ class Entry
     public $localUpdated;
     private static $updated = NULL;
 
+// use these if you want to have different icons for main and category page
+//        Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
+//        Book::ALL_RECENT_DATES_ID    => 'images/recent.png',
+  
     public static $icons = array(
+        ":recent"                    => 'images/recent.png',
         Author::ALL_AUTHORS_ID       => 'images/author.png',
         Serie::ALL_SERIES_ID         => 'images/serie.png',
-        Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
         Tag::ALL_TAGS_ID             => 'images/tag.png',
         Language::ALL_LANGUAGES_ID   => 'images/language.png',
         CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
@@ -425,6 +429,10 @@ class Page
                 return new PageAllPublishers ($id, $query, $n);
             case Base::PAGE_PUBLISHER_DETAIL :
                 return new PagePublisherDetail ($id, $query, $n);
+            case Base::PAGE_ALL_RECENT_DATES :
+                return new PageAllRecentDates ($id, $query, $n);
+            case Base::PAGE_RECENT_DETAIL :
+                return new PageRecentDetail ($id, $query, $n);
             case Base::PAGE_ABOUT :
                 return new PageAbout ($id, $query, $n);
             case Base::PAGE_CUSTOMIZE :
@@ -711,6 +719,31 @@ class PageRecentBooks extends Page
     }
 }
 
+class PageAllRecentDates extends Page
+{
+    public function InitializeContent ()
+    {
+        $this->title = localize ("recent.title");
+        $this->entryArray = Book::getAllRecentDates ();
+        $this->idPage = Book::ALL_RECENT_DATES_ID;
+    }
+}
+
+class PageRecentDetail extends Page
+{
+    public function InitializeContent ()
+    {
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByDate ($this->idGet, $this->n);
+        $this->idPage = Book::getEntryIdByDate ($this->idGet);
+
+        $count = $this->totalNumber;
+        if ($count == -1)
+            $count = count ($this->entryArray);
+
+        $this->title = str_format (localize ("splitByDate.date"), str_format (localize ("bookword", $count), $count), $this->idGet);
+    }
+}
+
 class PageQueryResult extends Page
 {
     const SCOPE_TAG = "tag";
@@ -881,6 +914,8 @@ abstract class Base
     const PAGE_CUSTOMIZE = "19";
     const PAGE_ALL_PUBLISHERS = "20";
     const PAGE_PUBLISHER_DETAIL = "21";
+    const PAGE_ALL_RECENT_DATES = "22";
+    const PAGE_RECENT_DETAIL = "23";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
 

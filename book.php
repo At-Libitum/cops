@@ -44,12 +44,15 @@ define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     title like ?) {1} order by books.sort");
 define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where 1=1 {1} order by timestamp desc limit ");
+define ('SQL_BOOKS_BY_DATE', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where strftime('%Y-%m-%d', books.timestamp) = ? order by books.sort asc ");
 
 class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
     const ALL_BOOKS_ID = "cops:books";
     const ALL_RECENT_BOOKS_ID = "cops:recentbooks";
-    const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating";
+    const ALL_RECENT_DATES_ID = "cops:recentdates";
+    const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, strftime('%Y-%m-%d',timestamp) as adddate, pubdate, series_index, uuid, has_cover, ratings.rating";
 
     const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
     const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
@@ -62,6 +65,7 @@ class Book extends Base {
     const SQL_BOOKS_BY_CUSTOM = SQL_BOOKS_BY_CUSTOM;
     const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
+    const SQL_BOOKS_BY_DATE = SQL_BOOKS_BY_DATE;
 
     const BAD_SEARCH = "QQQQQ";
 
@@ -69,6 +73,7 @@ class Book extends Base {
     public $title;
     public $timestamp;
     public $pubdate;
+    public $adddate;
     public $path;
     public $uuid;
     public $hasCover;
@@ -90,6 +95,7 @@ class Book extends Base {
         $this->title = $line->title;
         $this->timestamp = strtotime ($line->timestamp);
         $this->pubdate = strtotime ($line->pubdate);
+        $this->adddate = $line->adddate;
         $this->path = Base::getDbDirectory () . $line->path;
         $this->relativePath = $line->path;
         $this->seriesIndex = $line->series_index;
@@ -109,6 +115,10 @@ class Book extends Base {
 
     public static function getEntryIdByLetter ($startingLetter) {
         return self::ALL_BOOKS_ID.":letter:".$startingLetter;
+    }
+
+    public static function getEntryIdByDate ($adddate) {
+        return self::ALL_RECENT_DATES_ID.":date:".$adddate;
     }
 
     public function getUri () {
@@ -157,6 +167,7 @@ class Book extends Base {
                       "publisherName" => $pn,
                       "publisherurl" => $pu,
                       "pubDate" => $this->getPubDate (),
+                      "addDate" => $this->adddate,
                       "languagesName" => $this->getLanguages (),
                       "authorsName" => $this->getAuthorsName (),
                       "tagsName" => $this->getTagsName (),
@@ -529,6 +540,17 @@ class Book extends Base {
                           str_format (localize ("allbooks.alphabetical", $nBooks), $nBooks), "text",
                           array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS)));
         array_push ($result, $entry);
+        // with split_first_letter, decision could be made on the second level, here we need it on the first
+        if ($config['cops_show_recent_bydate'] == "1") {
+            $nDates = parent::getDb ()->query('select count() from (select strftime("%Y-%m-%d", books.timestamp) from books
+group by strftime("%Y-%m-%d", books.timestamp))')->fetchColumn();
+            $entry = new Entry (localize ("recent.title"),
+                                self::ALL_RECENT_DATES_ID,
+                                str_format (localize ("recent.alphabetical", $nDates), $nDates), "text",
+                                array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RECENT_DATES)));
+            array_push ($result, $entry);
+        }
+        else 
         if ($config['cops_recentbooks_limit'] > 0) {
             $entry = new Entry (localize ("recent.title"),
                               self::ALL_RECENT_BOOKS_ID,
@@ -661,6 +683,24 @@ order by substr (upper (sort), 1, 1)");
         return $entryArray;
     }
 
+    public static function getAllRecentDates() {
+        $result = parent::getDb ()->query("select strftime('%Y-%m-%d', books.timestamp) as title, count(*) as count
+from books
+group by strftime('%Y-%m-%d', timestamp)
+order by strftime('%Y-%m-%d', timestamp) desc");
+        $entryArray = array();
+        while ($post = $result->fetchObject ())
+        {
+            array_push ($entryArray, new Entry (localize ("date.added") . ": " . $post->title, Book::getEntryIdByDate ($post->title),
+                str_format (localize("bookword", $post->count), $post->count), "text",
+                array ( new LinkNavigation ("?page=".parent::PAGE_RECENT_DETAIL."&id=". rawurlencode ($post->title)))));
+        }
+        return $entryArray;
+    }
+
+    public static function getBooksByDate($adddate, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_DATE, array($adddate), $n);
+    }
 }
 
 function getJson ($complete = false) {
@@ -803,6 +843,7 @@ function getJson ($complete = false) {
                        "permalinkAlt" => localize ("permalink.alternate"),
                        "publisherName" => localize("publisher.name"),
                        "pubdateTitle" => localize("pubdate.title"),
+                       "dateAdded" =>  localize("date.added"),
                        "languagesTitle" => localize("language.title"),
                        "contentTitle" => localize("content.summary"),
                        "sortorderAsc" => localize("search.sortorder.asc"),

@@ -303,9 +303,9 @@ class Book extends Base {
 
             while ($post = $result->fetchObject ())
             {
-                    array_push ($this->datas, new Data ($post, $this));
-                }
+                array_push ($this->datas, new Data ($post, $this));
             }
+        }
         return $this->datas;
     }
 
@@ -618,7 +618,7 @@ where data.book = books.id and data.id = ?');
             }
             else {
                 if (array_key_exists ($key, $query)) {
-                $critArray [$i] = $query [$key];
+                    $critArray [$i] = $query [$key];
                 } else {
                     $critArray [$i] = $query ["all"];
             }

@@ -736,9 +736,9 @@ function getJson ($complete = false) {
                 if (!Base::noDatabaseSelected ()) {
                     foreach ($array as $entry) {
                         if ($entry instanceof EntryBook) {
-                            array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
+                            array_push ($out, array ("class" => "tt-text", "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
                         } else {
-                            array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->getNavLink ()));
+                            array_push ($out, array ("class" => "tt-text", "title" => $entry->title, "navlink" => $entry->getNavLink ()));
                         }
                         $i++;
                         if ($i > 4) { break; };

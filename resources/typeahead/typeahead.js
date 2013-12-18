@@ -698,7 +698,7 @@
                 cursor: "pointer"
             },
             suggestionChild: {
-                whiteSpace: "normal"
+                whiteSpace: "nowrap"
             }
         };
         function DropdownView(o) {
@@ -789,13 +789,14 @@
                     this.trigger("opened");
                 }
             },
+// should also take into account at which side of the screen the search is located
             setLanguageDirection: function(dir) {
                 var ltrCss = {
-                    left: "0",
-                    right: "auto"
+                //    left: "0",
+                //    right: "auto"
                 }, rtlCss = {
-                    left: "auto",
-                    right: " 0"
+                //    left: "auto",
+                //    right: " 0"
                 };
                 dir === "ltr" ? this.$menu.css(ltrCss) : this.$menu.css(rtlCss);
             },
@@ -869,18 +870,19 @@
                 position: "absolute",
                 top: "0",
                 left: "0",
-                borderColor: "transparent",
+//                borderColor: "transparent",
                 boxShadow: "none"
             },
             query: {
                 position: "relative",
                 verticalAlign: "top",
-                backgroundColor: "transparent"
+//                backgroundColor: "transparent"  // interferes with customized CSS
             },
             dropdown: {
                 position: "absolute",
+/* should also take into account at which side of the screen the search is located
                 top: "100%",
-                left: "0",
+                left: "0",*/
                 zIndex: "100",
                 display: "none"
             }

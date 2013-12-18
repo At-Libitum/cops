@@ -158,12 +158,6 @@ display:inline-block;
     text-align:right;
 }
 
-.hicon.hicon32.sort{
-    height:26px;
-    width:40px;
-    vertical-align:middle;
-}
-
 .r_solid, .r_outline {
 	font-family: FontAwesome;
 }
@@ -230,13 +224,39 @@ header{
     cursor:pointer;
 }
 
-#tool{
-    padding:5px 5px 5px 5px;
-    margin:0 -1px 5px -1px;
+/* ==========================================================================
+   Aside stuff goes here
+   ========================================================================== */
+
+/*-------------Search Aside-------------*/
+.stop{
+    display:table-cell;
+    vertical-align:middle;
+    width:99%;
+}
+
+select{
+    display:table-cell;
+    vertical-align:middle;
+    height:23px;
 }
 
 #sortForm{
     float:left;
+}
+
+#sort{
+}
+
+.sort {
+    cursor:pointer;
+	text-align:center;
+}
+
+
+#searchForm{
+    display:table;
+    padding:0;
 }
 
 .searchForm{
@@ -246,6 +266,66 @@ header{
 .submit{
     cursor:pointer;
 }
+
+#tool{
+    padding:5px 5px 5px 5px;
+    margin:0 -1px 5px -1px;
+}
+
+#tool input[type=text],
+.twitter-typeahead{
+    vertical-align:middle;
+    width:100%;
+}
+
+.tt-hint,
+.tt-query{
+    width:100%;
+    height:23px;
+}
+
+.tt-dropdown-menu{
+    top:100%;
+    left:auto;
+    right:0;
+    margin-top:1px;
+    padding:5px 5px 5px 5px;
+    min-width:150px;
+    width:auto;
+    max-width:275px;
+    text-align:left;
+}
+
+.tt-suggestion{
+/*    padding:3px 20px;
+    line-height:14px;*/
+    position:relative;
+    max-width: 265px;
+}
+
+.tt-suggestion.tt-is-under-cursor{
+}
+
+/*
+.tt-suggestion .tt-section,
+*/
+
+.tt-suggestion .tt-header{
+    margin:0;
+    padding:0 2px 0px 2px;
+}
+
+.tt-suggestion .tt-text {
+    margin:0;
+    padding-left:10px;
+    padding-right:2px;
+    max-width:265px;
+    white-space:nowrap;
+    overflow: hidden; /* without it ellipsis don't work */
+    text-overflow: ellipsis;
+}
+
+.highlight {}
 
 #filter{
     margin:0px 0px 0px 0px;
@@ -305,7 +385,7 @@ header{
     border-left:thick solid blue;
     border-right:thick solid blue;
 */
-font-weight:700;
+    font-weight:700;
 }
 
 .filter-include::after {
@@ -607,6 +687,12 @@ footer{
     height:32px;
 }
 
+.footleft .hicon32,
+.footright .hicon32{
+    display:table-cell;
+    vertical-align:middle;
+}
+
 .footcenter{
     margin:auto;
     text-align:center;
@@ -623,92 +709,6 @@ footer{
     line-height:1em;
 }
 
-/* ==========================================================================
-   Aside stuff goes here
-   ========================================================================== */
-.footleft .hicon32,
-.footright .hicon32{
-    display:table-cell;
-    vertical-align:middle;
-}
-
-/*-------------Search Aside-------------*/
-.stop{
-    display:table-cell;
-    vertical-align:middle;
-    width:99%;
-}
-
-select{
-    display:inline;
-    vertical-align:middle;
-/*    margin:1px 0px 0px 2px;*/
-    height:23px;
-}
-
-#sort{
-    cursor:pointer;
-}
-
-#searchForm{
-    display:table;
-    padding:0;
-}
-
-#tool input[type=text],
-.twitter-typeahead{
-    vertical-align:middle;
-    width:100%;
-}
-
-.tt-hint,
-.tt-query{
-    width:100%;
-    height:23px;
-}
-
-.tt-dropdown-menu{
-    top:100%;
-    left:auto;
-    right:0;
-    margin-top:1px;
-    padding:5px 5px 5px 5px;
-    min-width:150px;
-    width:auto;
-    max-width:275px;
-    text-align:left;
-}
-
-.tt-suggestion{
-/*    padding:3px 20px;
-    line-height:14px;*/
-    position:relative;
-    max-width: 265px;
-}
-
-.tt-suggestion.tt-is-under-cursor{
-}
-
-/*
-.tt-suggestion .tt-section,
-*/
-
-.tt-suggestion .tt-header{
-    margin:0;
-    padding:0 2px 0px 2px;
-}
-
-.tt-suggestion .tt-text {
-    margin:0;
-    padding-left:10px;
-    padding-right:2px;
-    max-width:265px;
-    white-space:nowrap;
-    overflow: hidden; /* without it ellipsis don't work */
-    text-overflow: ellipsis;
-}
-
-.highlight {}
 
 /* ==========================================================================
    Mediaquerie stuff goes here
@@ -905,6 +905,7 @@ li.clear {
     color:rgb(246, 243, 233);
 }
 
+.sort,
 .submit{
 /*    background-image:none;*/
     border:none;

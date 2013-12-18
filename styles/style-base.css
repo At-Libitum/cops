@@ -83,6 +83,16 @@ color: black;
 background-color: white;
 opacity: 0.5;
 }
+.sb{
+border:0;
+height:26px;
+padding:0px 0.5em 0px 0.5em;
+margin:0px 4px 2px 0px;
+cursor:pointer;
+color: black;
+background-color: white;
+opacity: 0.5;
+}
 
 .filter-include {
     border-left:thick solid blue;
@@ -333,6 +343,9 @@ line-height: 100%;
 /* =============================================================================
    Aside stuff goes here
    ========================================================================== */
+/* keeps inactive sort arrows hidden without changing the button size */
+.hidden{ visibility:hidden; }
+
 #tool
 {
 width:100%;

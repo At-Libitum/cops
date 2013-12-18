@@ -394,7 +394,36 @@ function handleLinks () {
             return $(a).find ("." + $("#sortchoice").val()).text() > $(b).find ("." + $("#sortchoice").val()).text() ? test : -test;
         });
     });
-    
+    $("body").on ("click", "button.sb", function(event){
+        var bid = event.target.id;
+        for (i=1;i<=4;i++)
+        {
+            if (!$("#isb"+i).hasClass("hidden"))
+            {
+                $("#isb"+i).addClass(" hidden");
+            }
+            $("#i"+bid).removeClass("hidden");
+        }
+        if ($("#i"+bid).hasClass("icon-long-arrow-up"))
+        {   // arrow up: ascending - arrow down: descending
+            $("#i"+bid).removeClass("icon-long-arrow-up").addClass("icon-long-arrow-down");
+        }
+        else
+        {
+            $("#i"+bid).removeClass("icon-long-arrow-down").addClass("icon-long-arrow-up");
+        }
+        $('.books').sortElements(function(a, b){
+            var test = 1;
+            if ($("#i"+bid).hasClass("icon-long-arrow-down"))
+            {
+                test = -1;
+            }
+            // convert both strings to uppercase because sorting is case sensitive unlike in Calibre
+            //TODO: Make it so it sorts accented characters with non-accented equivalents.
+            //TODO: Make it so it sorts numbers numerical instead of lettersical
+            return $(a).find ("." + event.target.value ).text().toUpperCase() > $(b).find ("." + event.target.value ).text().toUpperCase() ? test : -test;
+        });
+    });
     $("body").on ("click", ".headright", function(){
         if ($("#tool").is(":hidden")) {
             $("#tool").slideDown("slow");

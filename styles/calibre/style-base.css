@@ -253,7 +253,6 @@ select{
 	text-align:center;
 }
 
-
 #searchForm{
     display:table;
     padding:0;
@@ -340,12 +339,11 @@ select{
     text-transform:none;
 }
 
-
 #filter li{ /* using float to also get rid of the line-feed space between button tags */
     float:left;
     height:20px;
     min-width:14px;
-    padding:4px 5px 0px 5px;
+    padding:2px 5px 2px 5px;
     margin:2px 4px 2px 0px;
     cursor:pointer;
     text-align:center;
@@ -366,7 +364,7 @@ select{
     float:left;
     height:20px;
     width:20px;
-    padding:4px 2px 0px 2px;
+    padding:2px 2px 2px 2px;
     margin:2px 4px 2px 0px;
     text-align:center;
     cursor:pointer;
@@ -766,7 +764,7 @@ body{ margin:5px;
       font-size:0.85em;
       /*font-weight:400; */ /* Better supported than 'lighter' attribute */ /* eh...lighter is 300 */
     }
-header, .header{ min-height:64px; }
+header, .header{ min-height:70px; }
 .headcenter { height:64px; }
 .hicon64{ font-size:64px; line-height:64px; width:64px; height:64px; }
 h1{ font-size:1.8em; line-height:1.2em; }

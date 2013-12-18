@@ -1,0 +1,84 @@
+<article class="bookpopup">
+    {{? it.book.hasCover == 1}}
+    <a href="{{=it.book.coverurl}}"><div class="cover"><img src="{{=it.book.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" /></div></a>
+    {{??}}
+    <div class="cover"><img src="{{=it.c.url.defaultCover}}" alt="{{=it.c.i18n.coverAlt}}" /></div>
+    {{?}}
+
+<div class="popupless">
+
+    <div class="popup-less">
+        <h2>{{=htmlspecialchars (it.title)}} </h2>
+    </div>
+
+    {{? it.book.seriesName != ""}}
+    <div class="popup-less">
+        <a href="{{=it.book.seriesurl}}">{{=htmlspecialchars (it.book.seriesCompleteName)}}</a>
+    </div>
+    {{?}}
+
+    <div class="popup-less">
+        <h4>{{=it.c.i18n.authorsTitle}}: </h4>
+        {{~it.book.authors:author:i}}
+        {{? i > 0}}&amp; {{?}}<a class="author" href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>
+        {{~}}
+    </div>
+
+    {{? it.book.publisherName != ""}}
+    <div class="popup-less">
+        <h4>{{=it.c.i18n.publisherName}}: </h4><a class="publisher" href="{{=it.book.publisherurl}}">{{=it.book.publisherName}}</a>
+    </div>
+    {{?}}
+
+    {{? it.book.pubDate != ""}}
+    <div class="popup-less">
+        <h4>{{=it.c.i18n.pubdateTitle}}: </h4><span class="sr">{{=it.book.pubDate}}</span>
+    </div>
+    {{?}}
+
+    {{? it.book.addDate != ""}}
+    <div class="popup-less">
+        <h4>{{=it.c.i18n.dateAdded}}: </h4><span class="sr">{{=it.book.addDate}}</span>
+    </div>
+    {{?}}
+
+    {{? it.book.languagesName != ""}}
+    <div class="popup-less">
+        <h4>{{=it.c.i18n.languagesTitle}}: </h4><span class="sr">{{=it.book.languagesName}}</span>
+    </div>
+    {{?}}
+
+    {{? it.book.rating != ""}}
+    <div class="popup-less">
+        <h4>{{=it.c.i18n.ratingTitle}}: </h4><span class="sr">{{=it.book.rating}}</span>
+    </div>
+    {{?}}
+
+    {{? it.book.tagsName != ""}}
+    <div class="popup-less">
+        <h4>{{=it.c.i18n.tagsTitle}}: </h4>
+        <span class="sr">{{~it.book.tags:tag:i}}{{? i > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a>{{~}}</span>
+    </div>
+    {{?}}
+
+    <div class="popup-less">
+        <div class="download">
+        <a id="permaLink" title="{{=it.c.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.c.url.detailUrl, it.book.id, it.databaseId)}}"><i class="icon-link"></i></a>
+        {{~it.book.datas:data:i}}
+        {{? data.mail == 1}}
+        <a id="mailButton" title="Mail" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;"><i class="icon-envelope"></i></a>
+        {{?}}
+        {{~}}
+        {{~it.book.datas:data:i}}
+        <a href="{{=data.url}}">{{=data.format}}</a>
+        {{~}}&nbsp;
+        </div>
+    </div>
+
+	{{? it.book.content != ""}}
+    <div class="clr-top"> </div>
+    <div class="popup-less"><h4>{{=it.c.i18n.contentTitle}}</h4><div class="description">{{=it.book.content}}</div></div>
+    {{?}}
+ </div>
+ <div class="clrboth"> </div>
+</article>

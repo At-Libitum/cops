@@ -1,0 +1,227 @@
+@import url("style-base.css");
+
+/* ==========================================================================
+   Background, Shadow, Border Rounding, Font Color definition stuff goes here
+   ========================================================================== */
+body {
+    background-color:rgb(246, 243, 233);
+}
+
+/* ==========================================================================
+   Typography stuff goes here
+   ========================================================================== */
+h2 {
+    text-shadow: 0.1em 0.1em 0.2em rgb(86, 82, 75);
+}
+
+h4{
+    color:rgb(86, 82, 75);
+}
+
+/* ==========================================================================
+   Main container stuff and other globals goes here
+   ========================================================================== */
+.container {
+/*    box-shadow:0px 5px 5px rgb(57, 50, 43);*/
+}
+
+/* ==========================================================================
+   Header stuff goes here
+   ========================================================================== */
+header {
+    padding-bottom:5px;
+    border-radius:10px 10px 0px 0px;
+/*    box-shadow:0px 3px 3px rgb(86, 82, 75);*/
+}
+
+.header {
+    margin-bottom:8px;
+    box-shadow:0px 0px 3px rgb(86, 82, 75);
+}
+
+#tool {
+    padding-top:0;
+    box-shadow:0px 3px 3px rgb(86, 82, 75);
+}
+/* ==========================================================================
+   Section and Article stuff goes here
+   ========================================================================== */
+section {
+    border-bottom:1px solid rgb(0, 0, 0);
+    text-align:center;
+}
+
+section .bookpopup{
+    border:1px solid rgb(214, 211, 201);
+    border-radius:5px 5px 5px 5px;
+    background-color:rgb(230, 227, 217);
+}
+
+section .bookpopup:hover{
+    background-color:rgb(230, 227, 217);
+}
+
+article {
+    box-shadow:0px 0px 5px rgb(246, 243, 233);
+}
+
+article:hover {
+    box-shadow:2px 4px 5px rgb(204, 204, 204);
+}
+
+article.catlibs {
+    border-radius:10px 10px 10px 10px;
+}
+
+/*-------------frontpage article-------------*/
+
+
+
+/*----------------books article----------------*/
+.books .cover {
+/* when using shadows add 2 pixels to top/right margin for book effect  */
+/* but if you do, also add 2pixels to the h2 header to prevent overflow */
+    margin:2px 2px 0px 0px;
+}
+/* any margin added to the cover also needs to be added here for Opera/Safari */
+.fullclickpopup h2 {
+    margin:2px 0px 0px 0px;
+}
+
+.books .cover img{
+    box-shadow: 0.1em -0.1em 0.2em rgb(86, 82, 75);
+}
+
+.download a {
+    border-radius:3px;
+    box-shadow:1px 1px 5px rgb(160, 160, 160);
+}
+
+.download a:hover{
+    box-shadow:0px 0px 5px rgb(32, 32, 32);
+}
+
+/*-------------books popup article-------------*/
+.bookpopup {
+    text-align:left
+}
+.bookpopup:hover {
+    box-shadow:none;
+}
+.bookpopup .cover {
+/*    border:1px solid transparent;*/
+/*    box-shadow:0px 5px 5px rgb(32, 32, 32);*/
+}
+
+.bookpopup h4 { }
+
+.popupless a {
+/*    color:#007;*/
+}
+
+.clrtop { }
+
+/* ==========================================================================
+   Footer stuff goes here
+   ========================================================================== */
+footer {
+    border-radius:0px 0px 10px 10px;
+}
+
+.footleft {
+/* compensate for the rounded corner */
+    margin-left:5px;
+
+}
+
+.footright {
+/* compensate for the rounded corner */
+    margin-right:5px;
+
+}
+
+/* ==========================================================================
+   Aside stuff goes here
+   ========================================================================== */
+
+/*-------------Search Aside-------------*/
+.tt-dropdown-menu,
+.tt-suggestions {
+    border:1px solid rgb(57, 50, 43);
+	border-radius:5px;
+	overflow:hidden;
+}
+
+/* ==========================================================================
+   Mediaquerie stuff goes here
+   ========================================================================== */
+/* 100px and greater */
+@media only screen and (min-width:100px) {
+.container, header, .header, #tool, section { border-radius:0; }
+}
+/*----------------------------------------------------------------------------*/
+/* 200px and greater */
+@media only screen and (min-width:200px){
+}
+/*----------------------------------------------------------------------------*/
+/* 320px and greater */ /* iPhone3, 3G, 4 in portrait mode */
+@media only screen and (min-width:320px) {
+article.catlibs{ border-radius:5px 5px 5px 5px; }
+}
+
+/*----------------------------------------------------------------------------*/
+/* 360px and greater */ /* ... in portrait mode */
+@media only screen and (min-width:360px) {
+}
+/*----------------------------------------------------------------------------*/
+/* 480px and greater */ /* iPhone3, 3G, 4 in landscape mode */
+@media only screen and (min-width:480px) {
+}
+/*----------------------------------------------------------------------------*/
+/* 640px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:640px) {
+}
+/*----------------------------------------------------------------------------*/
+/* 768px and greater */ /* iPad2 in  portrait mode */
+@media only screen and (min-width:768px) {
+.container { border-radius:10px 10px 10px 10px; }
+header  { border-radius:10px 10px 0px 0px; }
+.header  { border-radius:10px 10px 10px 10px; }
+#tool, section { border-radius:0px 0px 10px 10px; }
+}
+/*----------------------------------------------------------------------------*/
+/* 800px and greater */ /* ... in portrait mode */
+@media only screen and (min-width:800px) {
+}
+/*----------------------------------------------------------------------------*/
+/* 900px and greater */
+@media only screen and (min-width:900px) {
+}
+/*----------------------------------------------------------------------------*/
+/* 980px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:980px) {
+}
+/*----------------------------------------------------------------------------*/
+/* 1024px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:1024px) {
+}
+/*----------------------------------------------------------------------------*/
+/* 1280px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:1280px) {
+}
+/*----------------------------------------------------------------------------*/
+/* 1440px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:1440px) {
+}
+/*----------------------------------------------------------------------------*/
+/* 1800px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:1800px) {
+}
+
+/*---------lightbox books popup article--------*/
+.mfp-content .bookpopup{
+    background-color:rgb(246, 243, 233);
+    border-radius:10px 10px 10px 10px;
+}
+
+

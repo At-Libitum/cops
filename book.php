@@ -756,7 +756,14 @@ function getJson ($complete = false) {
     $currentPage = Page::getPage ($page, $qid, $query, $n);
     $currentPage->InitializeContent ();
 
-    $out = array ( "title" => $currentPage->title);
+    $out = array ( "title" => getCurrentOption ("title_default") );
+    // why define a main title if it only shows on the main screen?
+    // this begs for the use of a subtitle so that at least the main title always shows.
+    // subtitle consists of dbname if selected, plus info text or page name.
+    // also requires changing utils.js to make the window title follow nicely.
+    // it also felt like it should be a separate function
+    $out ["subTitle"] = getSubTitle ($page, $currentPage, $database);
+
     $entries = array ();
     foreach ($currentPage->entryArray as $entry) {
         array_push ($entries, $entry->getContentArray ());

@@ -1,0 +1,54 @@
+<header>
+    <div class="header">
+        <a href="{{=it.homeurl}}">
+        <div title="{{=it.c.i18n.homeAlt}}" class="hicon hicon64 headleft"><i class="icon-home" id="homeImage"></i></div>
+        </a>
+        <div{{? it.c.config.server_side_rendering == 0}} title="{{=it.c.i18n.cogAlt}}"{{?}} class="hicon hicon64 headright">
+             {{? it.c.config.server_side_rendering == 0}}
+             <i class="icon-download" id="searchImage"></i>
+             {{??}}
+             <i class="icon-none" id=""></i>
+             {{?}}
+        </div>
+        <div class="headcenter">
+            <div class="headcenter-tablecell">
+                <h1>{{=it.title}}</h1>
+                {{? it.subTitle != ""}}
+                <h3>{{=it.subTitle}}</h3>
+                {{?}}
+            </div>
+        </div>
+    </div>
+{{? it.page != 13 && it.page != 19 }}
+        <div id="tool" style="display: none">
+            {{? it.c.config.server_side_rendering == 0}} {{?}}
+            <div class="searchForm" style="">
+                <form id="searchForm" action="index.php" method="get">
+                    <div class="stop">
+                        <input type="hidden" name="page" value="9" />
+                        {{? it.databaseId != ""}}
+                        <input type="hidden" name="db" value="{{=it.databaseId}}" />
+                        {{?}}
+                        <input type="text" data-type="search" required="required" name="query" />
+                    </div>
+                    <button title="{{=it.c.i18n.searchAlt}}" type="submit" class="hicon hicon32 submit">
+                        <i class="icon-search icon-2x"></i>
+                    </button>
+                </form>
+            </div>
+            <div id="sortForm" style="display: none">
+                <div class="stop">
+                    <button class="sb" id="sb1" value="st" type="submit" title="">{{=it.c.i18n.bookwordTitle}} <i id="isb1" class="icon-long-arrow-up "></i></button>
+                    <button class="sb" id="sb2" value="sa" type="submit" title="">{{=it.c.i18n.authorsTitle}}  <i id="isb2" class="icon-long-arrow-down hidden"></i></button>
+                    <button class="sb" id="sb3" value="ss" type="submit" title="">{{=it.c.i18n.seriesTitle}}   <i id="isb3" class="icon-long-arrow-down hidden"></i></button>
+                    <button class="sb" id="sb4" value="sp" type="submit" title="">{{=it.c.i18n.pubdateTitle}}  <i id="isb4" class="icon-long-arrow-down hidden"></i></button>
+                </div>
+            </div>
+            <div id="filter" style="display: none"> <ul> </ul> </div>
+			<div id="letters" style="display: none"><ul>
+            <li class="clear"><i id="clear_letter" class="icon-undo"></i></li><li>A</li><li>B</li><li>C</li><li>D</li><li>E</li><li>F</li><li>G</li><li>H</li><li>I</li><li>J</li><li>K</li><li>L</li><li>M</li><li>N</li><li>O</li><li>P</li><li>Q</li><li>R</li><li>S</li><li>T</li><li>U</li><li>V</li><li>W</li><li>X</li><li>Y</li><li>Z</li><li>#</li>
+            </ul></div>
+            <div class="clrboth"> </div>
+        </div>
+{{?}}
+</header>

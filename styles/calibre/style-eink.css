@@ -1,0 +1,206 @@
+@import url("style-default.css");
+
+body{
+    font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+    background-color:#FFF;
+}
+
+a {
+    color: black;
+    font-weight: bold;
+}
+h2 {
+/*    text-shadow: 0.1em 0.1em 0.2em rgb(96, 96, 96);*/
+    text-shadow: 0.1em 0.1em 0.2em rgb(127, 127, 127);
+}
+
+.hicon {
+    color:rgb(224, 224, 224);
+}
+/* ==========================================================================
+   Main container stuff goes here and other globals
+   ========================================================================== */
+.container {
+    border-color:rgb(0, 0, 0);
+    background-color:#000;
+    box-shadow:0px 5px 5px rgb(32, 32, 32);
+}
+
+/* ==========================================================================
+   Header stuff goes here
+   ========================================================================== */
+header {
+    background-color:rgb(255, 255, 255);
+}
+
+.header{
+    border:1px solid rgb(0, 0, 0);
+    background-color:rgb(0, 0, 0);
+    box-shadow:0px 5px 5px rgb(64, 64, 64);
+}
+.headcenter {
+    color:rgb(224, 224, 224);
+}
+
+.headleft,
+.headcenter h1,
+.headright {
+    text-shadow: 1px  1px rgb(255, 255, 255),
+                -1px -1px rgb(127, 127, 127),
+                -1px  1px rgb(255, 255, 255),
+                 1px -1px rgb(127, 127, 127)
+                 ;
+}
+#tool{
+    background-color:rgb(224, 224, 224);
+}
+
+
+.sb, li, li.clear {
+    background-color:#000;
+    opacity:0.9;
+}
+
+/* =============================================================================
+ * Section and Article stuff goes here
+ * ============================================================================= */
+section{
+
+    background-color:#FFF;
+}
+
+section .bookpopup,
+article {
+    border:1px solid rgb(0, 0, 0);
+    border-radius:5px 5px 5px 5px;
+    background-color:rgb(224, 224, 224);
+    box-shadow:0px 0px 5px rgb(96, 96, 96);
+}
+
+section .bookpopup:hover{
+    background-color:rgb(224, 224, 224);
+}
+
+article:hover {
+    background-color:rgb(192, 192, 192);
+}
+
+article.catlibs {
+    border:1px solid rgb(0, 0, 0);
+}
+
+article.books {
+    border:1px solid rgb(0, 0, 0);
+}
+
+/*-------------frontpage article-------------*/
+.caticon {
+/*    display:none;*/
+}
+
+.frontpage h2 {
+    margin-left:0px;
+    text-align: left;
+}
+
+.frontpage h4 {
+    margin-left:0px;
+    text-align: left;
+    color: rgb(80, 80, 80);
+    text-decoration: overline;
+}
+
+/*----------------books article----------------*/
+.books .cover {
+    margin:0px 0px 0px 0px;
+}
+
+.fancycover,
+.fancycover:hover{
+    color:rgb(224, 224, 224);
+}
+
+.download a {
+    background-color:#000;
+}
+
+.download a:hover{
+    box-shadow:0px 0px 5px rgb(32, 32, 32);
+}
+/*-------------books popup article-------------*/
+.mfp-content .bookpopup{
+    border:2px solid rgb(32, 32, 32);
+    background-color:rgb(224, 224, 224);
+}
+
+.bookpopup a img,
+.bookpopup a:hover img{
+/*    color:rgb(224, 224, 224);*/
+}
+/*------------books permlink article-----------*/
+section .bookpopup{
+
+}
+/*------------------footer stuf----------------*/
+footer {
+    background-color:#000;
+}
+
+.footcenter {
+    color:rgb(224, 224, 224);
+}
+/* ==========================================================================
+   Aside stuff goes here
+   ========================================================================== */
+
+.tt-dropdown-menu{
+    border:1px solid rgb(32, 32, 32);
+    /* will only show as long as dropdown has padding */
+    background-color:rgb(240, 240, 240);
+    color:rgb(32, 32, 32);
+    font-variant: normal;
+}
+
+.tt-suggestions {
+    border-top:0px solid rgb(32, 32, 32);
+}
+
+.tt-suggestion {
+    border-top:1px solid rgb(32, 32, 32);
+    border-bottom:0px solid rgb(32, 32, 32);
+    background-color:rgb(224, 224, 224);
+}
+/*
+.tt-suggestion .tt-section{
+    background-color:rgb(32, 32, 32);
+    border-bottom:1px solid rgb(32, 32, 32);
+    color:white;
+    font-weight:bold;
+}
+*/
+.tt-suggestion .tt-header{
+    border-top:1px solid rgb(32, 32, 32);
+    border-bottom:0px solid rgb(32, 32, 32);
+	background-color:rgb(176, 176, 176);
+    font-weight:bold;
+}
+
+.tt-suggestion .tt-text {
+/* don't use for background color otherwise tt-is-under-cursor doesn't take effect */
+/* use .tt-suggestion for backgrounds */
+    border-top:0px solid rgb(32, 32, 32);
+    border-bottom:1px solid transparent
+}
+
+.tt-suggestion.tt-is-under-cursor{
+/*    border-bottom:0px solid rgb(176, 176, 176);*/
+    background-color:rgb(192, 192, 192);
+    color:rgb(32, 32, 32);
+}
+/*
+    background-color:rgb(240, 240, 240);
+    background-color:rgb(224, 224, 224);
+	background-color:rgb(208, 208, 208);
+	background-color:rgb(192, 192, 192);
+	background-color:rgb(176, 176, 176);
+*/

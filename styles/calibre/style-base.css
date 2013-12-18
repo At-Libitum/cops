@@ -1,0 +1,1039 @@
+@charset "utf-8";
+/* Global Box Sizing and Font-Smoothing */
+*::before, *::after {
+/*  keeps the borders within the box  , *:after, *:before */
+/*    content: "";*/ /* fucks up the tool toggle icon's positioning */
+
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+    -webkit-font-smoothing:antialiased;
+    -moz-font-smoothing:antialiased;
+    -o-font-smoothing:antialiased;
+    font-smoothing:antialiased;
+}
+
+/* Make HTML 5 elements display block-level for consistent styling */
+header, section, article, figure, aside, footer, hgroup, menu, nav {
+/* sorry... enable as needed per, but I need inline-block here for at least article
+/*    display: block!important;*/
+}
+
+html{
+    font-size:100%;
+    -webkit-text-size-adjust:100%;
+    -ms-text-size-adjust:100%;
+    text-size-adjust:100%;
+}
+
+body{
+    margin:0;
+    padding:0;
+
+    /*
+    font-family:'Open Sans', sans-serif;
+    */
+    font-family:sans-serif;
+    font-size:0.85em;
+
+}
+
+img{
+    display:block; /* gets rid of that idiotic descender space below images in divs */
+/*    width:100%;*/
+    margin:0;
+    padding:0;
+    border:0;
+    width:auto\9; /* ie8 */ /* why bother, IE9 can't even use most parts */
+}
+
+/* ==========================================================================
+   Typography stuff goes here
+   ========================================================================== */
+h1,h2,h3,h4,h5,h6{ font-weight:bold; margin:0; padding:0; }
+/* h1 see mediaqueries */
+h2{font-size:1.2em;}
+h3{font-size:1.1em;}
+h4{font-size:1.0em;}
+h5{font-size:0.83em;}
+h6{font-size:0.75em;}
+
+a,
+a:hover,
+a:focus,
+a:active{ text-decoration:none; outline:none; }
+
+p {
+    text-indent:0;
+    margin-left:2px;
+}
+label,
+input{
+    height:23px;
+    vertical-align:middle;
+}
+
+input[type=text] {
+    height:18px;
+}
+/* remove spinner buttons in number inputs in webkit */
+/* frag, don't work in opera... ok, converted to text input with pattern */
+/* eh, this means this bit is obsolete, nevertheless, ya never know if'n when */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+ul {
+    list-style-type:none;
+}
+
+#email{
+    width:250px;
+}
+.hicon{
+    display:inline;
+    text-align:center;
+/*    margin:0 2px;*/
+}
+
+.icon-1x{
+    height:26px;
+    font-size:26px;
+    vertical-align:top;
+}
+.hicon16{
+    display:table-cell;
+    vertical-align:middle;
+    width:32px;
+    height:32px;
+    font-size:18px;
+}
+.hicon32{
+/*    line-height:32px;*/
+    width:32px;
+    height:32px;
+}
+
+.hicon64{
+    width:64px;
+    height:64px;
+    font-size:64px;
+    line-height:64px;
+}
+
+.icon-spinner {
+display:inline-block;
+}
+
+.icon-hider:before {
+/* don't show, only serves to prevent the title from jumping to much left and right */
+    visibility:hidden;
+/* even though it's invisible, still need it to fill up the box */
+    content: "\f021" !important;
+/*    margin:0 18px 0 0 ;*/
+}
+.icon-spinner:before {
+/* despite icon-spin taking care of the wobble, I still don't like the icon */
+    content: "\f021" !important;
+/*    margin:0 0 0 10px;*/
+}
+
+.icon-spin {
+/* font-awesome never sets it anyways so rotating looked already more like a wobble */
+/* plus it's too close to the title, and adding a margin makes it required anyways  */
+/*    -moz-transform-origin: 65% 45% !important;
+    -webkit-transform-origin: 65% 45% !important;
+    -o-transform-origin: 65% 45% !important;
+    transform-origin: 65% 50% !important;
+*/    /* firefox wants 5 extra */
+}
+
+.hicon.hicon32.submit{
+    padding:0;
+    margin:-2px 0 0 5px ;
+    height:32px;
+    width:32px;
+    text-align:right;
+}
+
+.hicon.hicon32.sort{
+    height:26px;
+    width:40px;
+    vertical-align:middle;
+}
+
+.r_solid, .r_outline {
+	font-family: FontAwesome;
+}
+.r_solid::before {
+	content: "\F005";
+}
+.r_outline::before {
+	content: "\F006";
+}
+
+
+/* ==========================================================================
+   Main container stuff goes here and other globals
+   ========================================================================== */
+.container{
+    width:100%;
+    max-width:1910px;
+/*    min-width:240px;*/
+}
+/* ==========================================================================
+   Header stuff goes here
+   ========================================================================== */
+header{
+    margin:0 0px 0 0px;
+    min-height:1px;
+    padding-bottom:5px;
+}
+
+.header{
+    margin:-1px -1px 0 -1px;
+}
+
+.headleft{
+    float:left;
+    cursor:pointer;
+}
+
+.headcenter{
+    display:table;
+    margin:auto;
+    height:64px;
+
+    float:none;
+
+    text-transform:capitalize;
+    font-variant:small-caps;
+    text-align:center;
+}
+
+.headcenter div{
+    display:table-cell;
+    vertical-align:middle;
+}
+
+.headcenter h3{
+    display:inline-block;
+    vertical-align:top;
+    margin-top:2px;
+}
+
+.headright{
+    float:right;
+    /*for ios compatibility*/
+    cursor:pointer;
+}
+
+#tool{
+    padding:5px 5px 5px 5px;
+    margin:0 -1px 5px -1px;
+}
+
+#sortForm{
+    float:left;
+}
+
+.searchForm{
+    float:right;
+}
+
+.submit{
+    cursor:pointer;
+}
+
+#filter{
+    margin:0px 0px 0px 0px;
+    clear:left;
+}
+
+#filter ul{
+    margin:0;
+    padding:0;
+    list-style-type:none;
+    text-align:left;
+    text-transform:none;
+}
+
+
+#filter li{ /* using float to also get rid of the line-feed space between button tags */
+    float:left;
+    height:20px;
+    min-width:14px;
+    padding:4px 5px 0px 5px;
+    margin:2px 4px 2px 0px;
+    cursor:pointer;
+    text-align:center;
+}
+
+#letters {
+    clear:both;
+}
+
+#letters ul {
+    margin:0;
+    padding:0;
+    list-style-type:none;
+    text-align:center;
+}
+
+#letters li {
+    float:left;
+    height:20px;
+    width:20px;
+    padding:4px 2px 0px 2px;
+    margin:2px 4px 2px 0px;
+    text-align:center;
+    cursor:pointer;
+}
+
+.sb{
+    float:left;
+    height:26px;
+    padding:0px 0.5em 0px 0.5em;
+    margin:2px 4px 2px 0px;
+    cursor:pointer;
+}
+
+.filter-include{
+/*
+    border-left:thick solid blue;
+    border-right:thick solid blue;
+*/
+font-weight:700;
+}
+
+.filter-include::after {
+/*    content: " \2713";*/
+}
+
+.filter-exclude{
+/*
+    border-left:thick solid red;
+    border-right:thick solid red;
+*/
+font-weight:light;
+}
+
+.filter-exclude::after {
+/*    content: " \2717";*/
+}
+
+article.books.filtered{
+    display:none;
+}
+
+/* ==========================================================================
+   Section and Article stuff goes here
+   ========================================================================== */
+section{
+    padding-bottom:5px;
+    text-align:center;
+}
+
+article{
+    margin:5px 5px 10px 5px;
+    padding:5px;
+    text-align:left;
+/*    min-width:250px;*/
+}
+
+
+article.catlibs {
+    display:inline-table;
+    vertical-align:middle;
+    padding:5px;
+}
+
+article.books {
+    display:inline-block;
+    vertical-align:top;
+}
+
+/*-------------frontpage article-------------*/
+.caticon{
+/* see media queries */
+    float:left;
+}
+
+.caticon img {
+/* see media queries */
+    margin:4px;
+    width:48px;
+    height:48px;
+}
+
+.frontpage{
+    display:block;
+    width:100%;
+}
+
+.frontpage > div{
+    display:inline-table;
+    vertical-align:middle;
+    width:100%;
+}
+
+.vcenter {
+    display:table-cell;
+    vertical-align:middle;
+    width:100%;
+}
+
+
+.frontpage h2{
+/* see media queries */
+}
+
+.frontpage h3 {
+/*
+    display:table-cell;
+    width:100%;
+    vertical-align:middle;
+*/
+}
+
+.frontpage h4{
+/* see media queries */
+    font-size:90%;
+/*    clear:right;*/
+}
+
+/*----------------books article----------------*/
+.books{
+    padding:5px 5px 5px 5px;
+/*    min-height:96px; *//* cover=86 + 2x5 for margin */
+}
+.books h2 {
+    white-space:nowrap;
+    overflow: hidden; /* without it ellipsis don't work */
+    text-overflow: ellipsis;
+}
+.books .left{
+    float:left;
+}
+
+.fancycover{ }
+
+.books .cover{
+    margin:0px 0px 0px 0px;
+    width:57px;
+    height:auto;
+    max-height:84px;
+}
+
+.books .cover img{
+    width:auto;
+    height:auto;
+    max-width:57px;
+    max-height:84px;
+    margin:0 auto 0 auto;
+}
+
+.books .right{
+    margin:0px 0px 0px 62px;
+    text-align:left;
+}
+
+.fullclickpopup{
+    min-height:82px;
+}
+
+.fullclickpopup h2{
+
+}
+
+.fullclickpopup h4{
+    display:inline;
+    font-size:90%;
+    font-style:italic;
+}
+
+.fullclickpopup span{
+}
+
+.download{
+    float:right;
+/*    display:block;*/
+    line-height:32px;
+    text-align:right;
+    margin:-2px 0 0 2px;
+
+}
+
+.download a{
+    text-align:center;
+    font-weight:bold;
+    padding:4px 6px 4px 6px;
+}
+
+.download img{
+    vertical-align:middle;
+}
+
+/*-------------books popup article-------------*/
+/*---------lightbox books popup article--------*/
+
+/* make sure that these get applied, magnific-popup.css has some design issues
+   requiring exact selectors to be used otherwise yours won't have effect
+   and even then important may be needed as in below two cases.
+*/
+/* gets overruled by magnific-popup somehow if no !important */
+/* doesn't keep shrinking the popup to fit if width previously set to 100% */
+
+.mfp-content,
+.mfp-inline-holder .mfp-content{
+/*    padding:15px;*/
+    max-width:620px;
+}
+
+section .bookpopup{
+    padding:20px 15px 20px 15px; /* take off 5 pixels from the top/bottom to compensate for when shown as normal page */
+    margin:0px auto 5px auto;
+}
+
+.mfp-content .bookpopup{
+    padding:15px 15px 15px 15px;
+}
+
+/* gets overruled by magnific-popup somehow if no !important */
+.mfp-zoom-out-cur .mfp-image-holder .mfp-close {
+    cursor:pointer!important;
+}
+
+.bookpopup{
+    border:none;
+    margin:0px auto;
+    min-height:175px;
+    max-width:620px;
+    text-align:left;
+}
+
+.bookpopup .cover{
+    border:0;
+    float:left;
+    display:block;
+    margin:2px 10px 0px 0px;
+    width:29%;
+    height:auto;
+    max-height:258px;
+}
+
+/* based on popup max-width 620px -> minus margins = 580px -> 30% = 172px */
+/* based on calculated max-width and 2:3 ratio, max-height = 172px * 1.5 -> 258px */
+.bookpopup .cover img{
+    width:100%;
+    height:auto;
+    max-width:172px;
+    max-height:258px;
+    margin:0 auto 0 auto;
+}
+
+.bookpopup .download{
+    float:none;
+    text-align:left;
+}
+
+/* put the button outside of the popup, just like with the covers */
+.bookpopup .mfp-close{
+/*    top:-40px;
+    right:-5px;
+    color:#fff;*/
+}
+
+.bookpopup h3{
+    clear:none;
+    margin-top:4px;
+}
+
+.bookpopup h4{
+    display:inline;  /*Dirty IE Hack*/  zoom:1;  *display:inline;
+    line-height:1.5em;
+    font-style:italic;
+}
+
+/* specific for mfp popup */
+.popupless { }
+
+.popup-less { }
+
+.popupless h2{
+    font-size:1.5em;
+    line-height:1em;
+    margin-top:3px;
+    margin-bottom:3px;
+}
+
+.popupless a{ }
+
+/* if it's gonna wrap to the next line anyways then wrap the whole name, looks nicer */
+.popupless .author{
+/*    white-space:nowrap;
+    word-wrap:break-word;*/ /* let's see if it clashes with white-space */
+}
+
+div.description{
+    margin:0 0 0 1px;
+    font-weight:600;
+    font-size:90%;
+}
+
+.clrtop{ }
+
+.clrboth{
+    clear:both;
+}
+
+/* ==========================================================================
+   Footer stuff goes here
+   ========================================================================== */
+footer{
+    margin:0 0 0 0;
+    height:32px;
+}
+
+.footleft{
+    float:left;
+    height:32px;
+}
+
+.footright{
+    float:right;
+    height:32px;
+}
+
+.footcenter{
+    margin:auto;
+    text-align:center;
+    height:32px;
+    display:table;
+    font-weight:bold;
+}
+
+.footcenter p,
+.footcenter a{
+    display:table-cell;
+    vertical-align:middle;
+    text-align:center;
+    line-height:1em;
+}
+
+/* ==========================================================================
+   Aside stuff goes here
+   ========================================================================== */
+.footleft .hicon32,
+.footright .hicon32{
+    display:table-cell;
+    vertical-align:middle;
+}
+
+/*-------------Search Aside-------------*/
+.stop{
+    display:table-cell;
+    vertical-align:middle;
+    width:99%;
+}
+
+select{
+    display:inline;
+    vertical-align:middle;
+/*    margin:1px 0px 0px 2px;*/
+    height:23px;
+}
+
+#sort{
+    cursor:pointer;
+}
+
+#searchForm{
+    display:table;
+    padding:0;
+}
+
+#tool input[type=text],
+.twitter-typeahead{
+    vertical-align:middle;
+    width:100%;
+}
+
+.tt-hint,
+.tt-query{
+    width:100%;
+    height:23px;
+}
+
+.tt-dropdown-menu{
+    top:100%;
+    left:auto;
+    right:0;
+    margin-top:1px;
+    padding:5px 5px 5px 5px;
+    min-width:150px;
+    width:auto;
+    max-width:275px;
+    text-align:left;
+}
+
+.tt-suggestion{
+/*    padding:3px 20px;
+    line-height:14px;*/
+    position:relative;
+    max-width: 265px;
+}
+
+.tt-suggestion.tt-is-under-cursor{
+}
+
+/*
+.tt-suggestion .tt-section,
+*/
+
+.tt-suggestion .tt-header{
+    margin:0;
+    padding:0 2px 0px 2px;
+}
+
+.tt-suggestion .tt-text {
+    margin:0;
+    padding-left:10px;
+    padding-right:2px;
+    max-width:265px;
+    white-space:nowrap;
+    overflow: hidden; /* without it ellipsis don't work */
+    text-overflow: ellipsis;
+}
+
+.highlight {}
+
+/* ==========================================================================
+   Mediaquerie stuff goes here
+   ========================================================================== */
+/*----------------------------------------------------------------------------*/
+/* 100px and greater */ /* if you got smaller you need to rethink your life */
+@media only screen and (min-width:100px){
+body { font-size:0.75em; /*line-height:1.35em;*/ }
+header, .header{ min-height:48px; }
+.headcenter{ height:48px; }
+.hicon64{ font-size:48px; line-height:48px; width:48px; height:48px; }
+h1{ font-size:1.3em; }
+#filter { clear:left; }
+#letters { clear:both; }
+.container{ width:auto;margin:0; }
+.searchForm{ float:none; width:99%; padding-left:2px; }
+section .bookpopup{ margin-left:10px; margin-right:10px; }
+article.catlibs, article.books { width:93%; }
+.caticon img{ width:32px; height:32px; }
+.frontpage { /*min-height:40px;*/ }
+.frontpage h2{ /*line-height:24px;*/ }
+a, a:hover, a:focus, a:active { font-weight: bold; }
+}
+/*----------------------------------------------------------------------------*/
+/* 320px and greater */
+@media only screen and (min-width:320px){
+h1{ font-size:1.4em; }
+article.catlibs, article.books { width:93%; }
+.bookpopup .download { margin-top:-2px; }
+.clrtop { clear:both; }
+}
+/*----------------------------------------------------------------------------*/
+/* 360px and greater */
+@media only screen and (min-width:360px) {
+h1{ font-size:1.5em; }
+}
+/*----------------------------------------------------------------------------*/
+/* 480px and greater */
+@media only screen and (min-width:480px){
+body{ /*font-weight:400; */ /* Better supported than 'lighter' attribute */
+/* lighter would be <400. And only x00 values exists, no x50 values */  }
+h1{ font-size:1.5em; }
+div.searchForm{ float:right; width:160px; }
+.clrtop { clear:right; }
+}
+/*----------------------------------------------------------------------------*/
+/* 640px and greater */
+@media only screen and (min-width:640px){
+article.catlibs, article.books { width:45%; }
+}
+/*----------------------------------------------------------------------------*/
+/* 768px and greater */
+@media only screen and (min-width:768px){
+body{ margin:5px;
+      font-size:0.85em;
+      /*font-weight:400; */ /* Better supported than 'lighter' attribute */ /* eh...lighter is 300 */
+    }
+header, .header{ min-height:64px; }
+.headcenter { height:64px; }
+.hicon64{ font-size:64px; line-height:64px; width:64px; height:64px; }
+h1{ font-size:1.8em; line-height:1.2em; }
+section .bookpopup{ margin-left:auto; margin-right:auto; }
+article.catlibs, article.books { width:46.5%; }
+.caticon img{ width:48px; height:48px; }
+.frontpage { /*min-height:56px;*/ }
+.frontpage h2{ /*line-height: 32px*/ }
+a, a:hover, a:focus, a:active { font-weight: bold; }
+
+}
+/*----------------------------------------------------------------------------*/
+/* 800px and greater */ /* ... in portrait mode */
+@media only screen and (min-width:800px){
+}
+/*----------------------------------------------------------------------------*/
+/* 900px and greater */
+@media only screen and (min-width:900px){
+article.catlibs, article.books { width:46.5%; }
+}
+/*----------------------------------------------------------------------------*/
+/* 980px and greater */ /* ... in portrait mode */
+@media only screen and (min-width:980px){
+article.catlibs, article.books { width:30%; }
+}
+/*----------------------------------------------------------------------------*/
+/* 1024px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:1024px){
+body{
+/*    font-size:0.9em;*/
+    font-weight:400; /* Better supported than 'lighter' attribute */ /* eh...lighter is 300 */
+    }
+#filter { clear:none; }
+h1{ font-size:2.0em; line-height:1.2em; }
+article.catlibs, article.books { width:30.5%; }
+}
+/*----------------------------------------------------------------------------*/
+/* 1280px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:1280px){
+article.catlibs, article.books { width:23%; }
+}
+/*----------------------------------------------------------------------------*/
+/* 1440px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:1440px){
+article.catlibs, article.books { width:23%; }
+}
+/*----------------------------------------------------------------------------*/
+/* 1600px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:1600px){
+article.catlibs, article.books { width:23.2%; }
+}
+/*----------------------------------------------------------------------------*/
+/* 1800px and greater */ /* ... in landscape mode */
+@media only screen and (min-width:1800px){
+article.catlibs, article.books { width:18.5%; }
+#letters { clear:none; }
+}
+/*----------------------------------------------------------------------------*/
+
+
+/*---------------------------------------------*/
+/* keeps inactive sort arrows hidden without changing the button size */
+.hidden{ visibility:hidden; }
+
+/*
+titlesort	h2 span .oksort
+title       h2 span .nosort
+authorsort  div span .oksort
+authorname  div span .nosort
+*/
+/* titleSort and author in "LN, FN" format currently only used for sorting, not for display */
+
+h2 > .oksort,
+div > .oksort {
+    display:none;
+}
+
+/* ==========================================================================
+   Background, Shadow, Border Rounding, Font Color definition stuff goes here
+   ========================================================================== */
+body{
+    color: #000;
+}
+
+a,
+a:hover,
+a:focus,
+a:active{ color:#313131; }
+a:visited{ color:#313131; } /* prevents security measure from kicking in since visited only allows color change */
+
+img {
+/*	don't make the alt text show */
+	color:transparent !important;
+}
+.container{
+    border:1px solid rgb(57, 50, 43);
+    background-color:rgb(57, 50, 43);
+}
+
+header{
+    border:1px solid rgb(57, 50, 43);
+    border-bottom:0px solid rgb(246, 243, 233);
+    background-color:rgb(246, 243, 233);
+}
+
+.header{
+    background-color:rgb(57, 50, 43);
+    color:rgb(255, 255, 255);
+}
+
+#tool{
+    border:1px solid rgb(0, 0, 0);
+    border-top:0px;
+    background-color:rgb(246, 243, 233);
+}
+
+.sb, li{
+    border:1px solid rgb(57, 50, 43);
+    background-color:rgb(57, 50, 43);
+    color:rgb(246, 243, 233);
+    opacity:0.6;
+}
+
+li.clear {
+    opacity:0.7;
+}
+
+.filter-include {
+    opacity:0.9;
+}
+.filter-exclude {
+    opacity:0.3;
+}
+
+.hicon{
+    color:rgb(246, 243, 233);
+}
+
+.submit{
+/*    background-image:none;*/
+    border:none;
+    background-color:transparent;
+    color:rgb(57, 50, 43);
+}
+
+section{
+    border:1px solid rgb(57, 50, 43);
+    border-top:0px solid rgb(246, 243, 233);
+    background-color:rgb(246, 243, 233);
+}
+
+article{
+    border:1px solid rgb(214, 211, 201);
+/*
+    border-right:1px solid rgb(57, 50, 43);
+    border-bottom:1px solid rgb(57, 50, 43);
+*/
+    background-color:rgb(230, 227, 217);
+}
+
+article:hover {
+    background-color:rgb(214, 211, 201);
+}
+
+.fancycover,
+.fancycover:hover{
+    color:rgb(230, 227, 217);
+}
+
+h4{
+    color:rgb(89, 82, 75);
+}
+
+.download a{
+    background-color:rgb(57, 50, 43);
+    color:rgb(246, 243, 233);
+}
+
+.bookpopup,
+.bookpopup:hover{
+    background-color:rgb(246, 243, 233);
+}
+
+.bookpopup h3{
+    border-top:0;
+}
+.bookpopup .mfp-close{
+    color:rgb(57, 50, 43);
+}
+
+.mfp-content .bookpopup{
+    background:#FFF;
+}
+
+.popupless a:hover{
+    /*    background-color:#EEE;
+    */
+}
+
+.popup-less a:hover{
+    background-color:rgb(214, 211, 201);
+/*    color:rgb(57, 50, 43);*/
+}
+
+footer{
+    background-color:rgb(57, 50, 43);
+    background-color:transparent;
+    color:white;
+}
+
+.tt-dropdown-menu{
+    border:1px solid rgb(57, 50, 43);
+    /* will only show as long as dropdown has padding */
+    background-color:rgb(246, 243, 233);
+    color:rgb(57, 50, 43);
+    font-variant: normal;
+}
+
+.tt-suggestions {
+    border:1px solid rgb(57, 50, 43);
+    border-top:0px solid rgb(57, 50, 43);
+}
+
+.tt-suggestion {
+    border-top:1px solid rgb(57, 50, 43);
+    border-bottom:1px solid rgb(214, 211, 201);
+    background-color:rgb(230, 227, 217);
+}
+/* okay, assuming we're never going to show more than 2 levels than tt-section is not needed anymore */
+/*
+.tt-suggestion .tt-section{
+    border-bottom:1px solid rgb(57, 50, 43);
+    background-color:rgb(57, 50, 43);
+    color:white;
+    font-weight:bold;
+}
+*/
+.tt-suggestion .tt-header{
+    background-color:rgb(182, 179, 169);
+    border-top:1px solid rgb(57, 50, 43);
+    border-bottom:1px solid solid rgb(57, 50, 43);
+    font-weight:bold;
+}
+
+.tt-suggestion .tt-text{
+/* don't use for background color or tt-is-under-cursor won't take effect */
+/* use .tt-suggestion for backgrounds */
+}
+
+.tt-suggestion.tt-is-under-cursor{
+    background-color:rgb(198, 195, 185);
+    color:rgb(57, 50, 43);
+}
+
+.highlight0,
+.highlight1,
+.highlight2 { background-color:#FFFF00; }
+
+.tooltip {
+    color: #4E4E4E;
+    background: #C4E424;
+}
+/*
+    background-color:rgb(246, 243, 233);
+    background-color:rgb(230, 227, 217);
+    background-color:rgb(214, 211, 201);
+    background-color:rgb(198, 195, 185);
+    background-color:rgb(182, 179, 169);
+
+*/

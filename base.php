@@ -235,6 +235,33 @@ function addURLParameter($urlParams, $paramName, $paramValue) {
     return $start . http_build_query($params);
 }
 
+// not directly a gp function, but didn't know quite where to put it otherwise.
+function getSubTitle ($page, $currentPage, $database) {
+    global $config; // tried avoiding to use it but see no other way yet.
+
+    $subTitle = "";
+    $dbName = Base::getDbName ();
+    if (($page == "index") && (!is_null ($database))) {
+        $subTitles = array ();
+        if (isset ($config['calibre_subtitles'])) {
+            $subTitles = $config['calibre_subtitles'];
+        }
+        if (isset ($subTitles[$dbName])) {
+            $subTitle = $dbName . " - " . $subTitles[$dbName];
+        }
+    }
+    elseif (($page == Base::PAGE_BOOK_DETAIL)
+        ||  (($page == Base::PAGE_OPENSEARCH_QUERY) && is_null ($database))
+        ||  ($page == Base::PAGE_CUSTOMIZE)
+        ||  ($page == Base::PAGE_ABOUT)){
+        $subTitle = $currentPage->title;
+    }
+    elseif ($page != "index") {
+        $subTitle = $dbName . " - " . $currentPage->title;
+    }
+    return $subTitle;
+}
+
 class Link
 {
     const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
@@ -376,7 +403,7 @@ class EntryBook extends Entry
     }
 
     public function getContentArray () {
-        $entry = array ( "title" => $this->title);
+        $entry = array ( "title" => $this->title );
         $entry ["book"] = $this->book->getContentArray ();
         return $entry;
     }

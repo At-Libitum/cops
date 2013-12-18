@@ -1,0 +1,29 @@
+<footer>
+    <a class="footleft" href="index.php?page=19"><div title="{{=it.c.i18n.customizeTitle}}" class="hicon hicon32"><i class="icon-wrench icon-2x"></i></div></a><!-- icon-cogs -->
+    <a class="footright" class="fancyabout" href="{{=it.abouturl}}"><div title="{{=it.c.i18n.aboutTitle}}" class="hicon hicon32"><i class="icon-info-sign icon-2x"></i></div></a>
+    {{? it.isPaginated == 1}}
+    <div class="footcenter">
+        {{? it.firstLink != ""}}
+        <a id="firstLink" href="{{=it.firstLink}}" ><div title="{{=it.c.i18n.firstAlt}}" class="hicon hicon16"><i class="icon-double-angle-left icon1x"></i></div></a>
+        {{??}}
+        <div title="{{=it.c.i18n.firstAlt}}" class="hicon hicon16">&nbsp;</div>        
+        {{?}}
+        {{? it.prevLink != ""}}
+        <a id="prevLink" href="{{=it.prevLink}}" ><div title="{{=it.c.i18n.previousAlt}}" class="hicon hicon16"><i class="icon-angle-left icon1x"></i></div></a>
+        {{??}}
+        <div title="{{=it.c.i18n.previousAlt}}" class="hicon hicon16">&nbsp;</div>        
+        {{?}}
+        <p> {{=it.currentPage}} / {{=it.maxPage}} </p>
+        {{? it.nextLink != ""}}
+        <a id="nextLink" href="{{=it.nextLink}}" ><div title="{{=it.c.i18n.nextAlt}}" class="hicon hicon16"><i class="icon-angle-right icon1x"></i></div></a>
+        {{??}}
+        <div title="{{=it.c.i18n.nextAlt}}" class="hicon hicon16">&nbsp;</div>        
+        {{?}}
+        {{? it.lastLink != ""}}
+        <a id="lastLink" href="{{=it.lastLink}}" ><div title="{{=it.c.i18n.lastAlt}}" class="hicon hicon16"><i class="icon-double-angle-right icon1x"></i></div></a>
+        {{??}}
+        <div title="{{=it.c.i18n.lastAlt}}" class="hicon hicon16">&nbsp;</div>        
+        {{?}}
+    </div>
+    {{?}}
+</footer>

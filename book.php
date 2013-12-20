@@ -163,7 +163,8 @@ class Book extends Base {
                       "seriesName" => $sn,
                       "seriesIndex" => $this->seriesIndex,
                       "seriesCompleteName" => $scn,
-                      "seriesurl" => $su);
+                      "seriesurl" => $su,
+                      "title" => $this->title);
 
     }
     public function getFullContentArray () {

@@ -7,9 +7,27 @@
     </div>
     {{? it.isPaginated == 1}}
     <div class="footcenter">
-        {{? it.prevLink != ""}}<a id="prevLink" href="{{=it.prevLink}}" ><div title="{{=it.c.i18n.previousAlt}}" class="hicon hicon32"><i class="icon-angle-left icon-2x"></i></div></a>{{?}}
+        {{? it.firstLink != ""}}
+        <a id="firstLink" href="{{=it.firstLink}}" ><div title="{{=it.c.i18n.firstAlt}}" class="hicon hicon32"><i class="icon-double-angle-left icon-2x"></i></div></a>
+        {{??}}
+        <div title="{{=it.c.i18n.firstAlt}}" class="hicon hicon32">&nbsp;</div>
+        {{?}}
+        {{? it.prevLink != ""}}
+        <a id="prevLink" href="{{=it.prevLink}}" ><div title="{{=it.c.i18n.previousAlt}}" class="hicon hicon32"><i class="icon-angle-left icon-2x"></i></div></a>
+        {{??}}
+        <div title="{{=it.c.i18n.previousAlt}}" class="hicon hicon32">&nbsp;</div>
+        {{?}}
         <p> {{=it.currentPage}} / {{=it.maxPage}} </p>
-        {{? it.nextLink != ""}}<a id="nextLink" href="{{=it.nextLink}}" ><div title="{{=it.c.i18n.nextAlt}}" class="hicon hicon32"><i class="icon-angle-right icon-2x"></i></div></a>{{?}}
+        {{? it.nextLink != ""}}
+        <a id="nextLink" href="{{=it.nextLink}}" ><div title="{{=it.c.i18n.nextAlt}}" class="hicon hicon32"><i class="icon-angle-right icon-2x"></i></div></a>
+        {{??}}
+        <div title="{{=it.c.i18n.nextAlt}}" class="hicon hicon32">&nbsp;</div>
+        {{?}}
+        {{? it.lastLink != ""}}
+        <a id="lastLink" href="{{=it.lastLink}}" ><div title="{{=it.c.i18n.lastAlt}}" class="hicon hicon32"><i class="icon-double-angle-right icon-2x"></i></div></a>
+        {{??}}
+        <div title="{{=it.c.i18n.lastAlt}}" class="hicon hicon32">&nbsp;</div>
+        {{?}}
     </div>
     {{?}}
 </footer>

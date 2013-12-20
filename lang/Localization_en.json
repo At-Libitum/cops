@@ -36,6 +36,8 @@
 "languages.title":"Languages",
 "mail.messagenotsent":"Message could not be sent.",
 "mail.messagesent":"Message has been sent",
+"paging.first.alternate":"First",
+"paging.last.alternate":"Last",
 "paging.next.alternate":"Next",
 "paging.previous.alternate":"Previous",
 "permalink.alternate":"Permalink",

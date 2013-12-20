@@ -781,9 +781,19 @@ function getJson ($complete = false) {
     $out ["entries"] = $entries;
     $out ["isPaginated"] = 0;
     if ($currentPage->isPaginated ()) {
+        $firstLink = $currentPage->getFirstLink ();
+        $lastLink = $currentPage->getLastLink ();
         $prevLink = $currentPage->getPrevLink ();
         $nextLink = $currentPage->getNextLink ();
         $out ["isPaginated"] = 1;
+        $out ["firstLink"] = "";
+        if (!is_null ($firstLink)) {
+            $out ["firstLink"] = $firstLink->hrefXhtml ();
+        }
+        $out ["lastLink"] = "";
+        if (!is_null ($lastLink)) {
+            $out ["lastLink"] = $lastLink->hrefXhtml ();
+        }
         $out ["prevLink"] = "";
         if (!is_null ($prevLink)) {
             $out ["prevLink"] = $prevLink->hrefXhtml ();
@@ -804,6 +814,8 @@ function getJson ($complete = false) {
                        "seriesTitle" => localize("series.title"),
                        "customizeTitle" => localize ("customize.title"),
                        "aboutTitle" => localize ("about.title"),
+                       "firstAlt" => localize ("paging.first.alternate"),
+                       "lastAlt" => localize ("paging.last.alternate"),
                        "previousAlt" => localize ("paging.previous.alternate"),
                        "nextAlt" => localize ("paging.next.alternate"),
                        "searchAlt" => localize ("search.alternate"),

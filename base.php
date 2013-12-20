@@ -16,6 +16,11 @@ function useServerSideRendering () {
     return preg_match("/" . $config['cops_server_side_render'] . "/", $_SERVER['HTTP_USER_AGENT']);
 }
 
+function getTrimmedQueryString() {
+    $currentUrl = getQueryString ();
+    return preg_replace ("/\&n=.*?$/", "", "?" . $currentUrl );
+}
+
 function getQueryString () {
     if ( isset($_SERVER['QUERY_STRING']) ) {
         return $_SERVER['QUERY_STRING'];
@@ -507,10 +512,25 @@ class Page
                 $this->totalNumber > getCurrentOption ("max_item_per_page"));
     }
 
+    public function getFirstLink ()
+    {
+        $currentUrl = getTrimmedQueryString ();
+        if ($this->n > 2) {
+            return new LinkNavigation ($currentUrl . "&n=1" , "first", localize ("paging.first.alternate"));
+        }
+        return NULL;
+    }
+    public function getLastLink ()
+    {
+        $currentUrl = getTrimmedQueryString ();
+        if (($this->n +1) < $this->getMaxPage()) {
+            return new LinkNavigation ($currentUrl . "&n=" . $this->getMaxPage() , "last", localize ("paging.last.alternate"));
+        }
+        return NULL;
+    }
     public function getNextLink ()
     {
-        $currentUrl = getQueryString ();
-        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . getQueryString ());
+        $currentUrl = getTrimmedQueryString ();
         if (($this->n) * getCurrentOption ("max_item_per_page") < $this->totalNumber) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n + 1), "next", localize ("paging.next.alternate"));
         }
@@ -519,8 +539,7 @@ class Page
 
     public function getPrevLink ()
     {
-        $currentUrl = getQueryString ();
-        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . getQueryString ());
+        $currentUrl = getTrimmedQueryString ();
         if ($this->n > 1) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n - 1), "previous", localize ("paging.previous.alternate"));
         }

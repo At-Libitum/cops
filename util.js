@@ -314,7 +314,8 @@ updatePage = function (data) {
 };
 
 navigateTo = function (url) {
-    $("h1").append (" <i class='icon-spinner icon-spin'></i>");
+// fix it so only the header h1 gets the spinner icon
+    $(".headcenter h1").append (" <i class='icon-spinner icon-spin'></i>");
     before = new Date ();
     var jsonurl = url.replace ("index", "getJSON");
     var cachedData = cache.get (jsonurl);

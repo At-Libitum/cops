@@ -145,7 +145,7 @@ function getTagList () {
 
 function updateFilters () {
     var tagList = getTagList ();
-    
+
     // If there is already some filters then let's prepare to update the list
     $("#filter ul li").each (function () {
         var text = $(this).text ();
@@ -155,7 +155,7 @@ function updateFilters () {
             tagList [text] = -1;
         }
     });
-    
+
     // Update the filter -1 to remove, 1 to add, 0 already there
     for (var tag in tagList) {
         var tagValue = tagList [tag];
@@ -166,9 +166,9 @@ function updateFilters () {
             $("#filter ul").append ("<li>" + tag + "</li>");
         }
     }
-    
+
     $("#filter ul").append ("<li>_CLEAR_</li>");
-    
+
     // Sort the list alphabetically
     $('#filter ul li').sortElements(function(a, b){
         return $(a).text() > $(b).text() ? 1 : -1;
@@ -181,7 +181,7 @@ function doFilter () {
         updateFilters ();
         return;
     }
-    
+
     $(".se").each (function(){
         var taglist = ", " + $(this).text() + ", ";
         var toBeFiltered = false;
@@ -201,7 +201,7 @@ function doFilter () {
         }
         if (toBeFiltered) { $(this).parents (".books").addClass ("filtered"); }
     });
-    
+
     // Handle the books with no tags
     var atLeastOneTagSelected = false;
     for (var filter in filterList) {
@@ -212,7 +212,7 @@ function doFilter () {
     if (atLeastOneTagSelected) {
         $(".books").not (":has(span.se)").addClass ("filtered");
     }
-    
+
     updateFilters ();
 }
 
@@ -269,9 +269,9 @@ updatePage = function (data) {
     document.title = data.title;
     currentData = data;
     setTimeout( function() { $("input[name=query]").focus(); }, 500 );
-    
+
     debug_log (elapsed ());
-    
+
     if ($.cookie('toolbar') === '1') { $("#tool").show (); }
     if (currentData.containsBook === 1) {
         $("#sortForm").show ();
@@ -303,7 +303,7 @@ updatePage = function (data) {
         }
     }
     ]);
-    
+
     $('input[name=query]').bind('typeahead:selected', function(obj, datum) {
         if (isPushStateEnabled) {
             navigateTo (datum.navlink);
@@ -339,12 +339,12 @@ function link_Clicked (event) {
     }
     event.preventDefault();
     var url = currentLink.attr('href');
-    
+
     if ($(".mfp-ready").length)
     {
         $.magnificPopup.close();
     }
-    
+
     // The bookdetail / about should be displayed in a lightbox
     if (getCurrentOption ("use_fancyapps") === "1" &&
         (currentLink.hasClass ("fancydetail") || currentLink.hasClass ("fancyabout"))) {
@@ -397,14 +397,23 @@ function handleLinks () {
     });
     $("body").on ("click", "button.sb", function(event){
         var bid = event.target.id;
-        for (i=1;i<=4;i++)
-        {
-            if (!$("#isb"+i).hasClass("hidden"))
-            {
-                $("#isb"+i).addClass(" hidden");
+        // only change classes if the clicked is not the current selected
+        if ($("#i"+bid).hasClass("hidden"))
+        { // wait with showing arrow until the current visible one is hidden
+            for (i=1;i<=4;i++)
+            { // only do something with the current and clicked
+                if (("sb"+i != bid) && (!$("#isb"+i).hasClass("hidden")))
+                {
+                    // current
+                    $("#sb"+i).removeClass("selected"); // remove highlight
+                    $("#isb"+i).addClass(" hidden");  // hide arrow
+                    // clicked
+                    $("#i"+bid).removeClass("hidden"); // unhide arrow
+                    $("#"+bid).addClass("selected");  // add highlight
+                }
             }
-            $("#i"+bid).removeClass("hidden");
         }
+
         if ($("#i"+bid).hasClass("icon-long-arrow-up"))
         {   // arrow up: ascending - arrow down: descending
             $("#i"+bid).removeClass("icon-long-arrow-up").addClass("icon-long-arrow-down");
@@ -421,7 +430,7 @@ function handleLinks () {
             }
             // convert both strings to uppercase because sorting is case sensitive unlike in Calibre
             //TODO: Make it so it sorts accented characters with non-accented equivalents.
-            //TODO: Make it so it sorts numbers numerical instead of lettersical
+            //TODO: Make it so it sorts numbers numerical instead of alphabetical
             return $(a).find ("." + event.target.value ).text().toUpperCase() > $(b).find ("." + event.target.value ).text().toUpperCase() ? test : -test;
         });
     });

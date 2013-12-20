@@ -67,6 +67,7 @@ p {
     text-indent:0;
     margin-left:2px;
 }
+
 label,
 input{
     height:23px;
@@ -92,6 +93,7 @@ ul {
 #email{
     width:250px;
 }
+
 .hicon{
     display:inline;
     text-align:center;
@@ -159,13 +161,13 @@ display:inline-block;
 }
 
 .r_solid, .r_outline {
-	font-family: FontAwesome;
+    font-family: FontAwesome;
 }
 .r_solid::before {
-	content: "\F005";
+    content: "\F005";
 }
 .r_outline::before {
-	content: "\F006";
+    content: "\F006";
 }
 
 
@@ -229,6 +231,17 @@ header{
    ========================================================================== */
 
 /*-------------Search Aside-------------*/
+#tool{
+    padding:5px 5px 5px 5px;
+    margin:0 -1px 5px -1px;
+}
+
+#tool input[type=text],
+.twitter-typeahead{
+    vertical-align:middle;
+    width:100%;
+}
+
 .stop{
     display:table-cell;
     vertical-align:middle;
@@ -242,15 +255,25 @@ select{
 }
 
 #sortForm{
+/* always floated left, no matter the viewport width */
     float:left;
 }
 
-#sort{
+.sb{
+    float:left;
+    height:26px;
+    padding:0px 0.5em 0px 0.5em;
+    margin:2px 4px 2px 0px;
+    cursor:pointer;
 }
 
 .sort {
     cursor:pointer;
-	text-align:center;
+    text-align:center;
+}
+
+.searchForm{
+    float:right;
 }
 
 #searchForm{
@@ -258,23 +281,8 @@ select{
     padding:0;
 }
 
-.searchForm{
-    float:right;
-}
-
 .submit{
     cursor:pointer;
-}
-
-#tool{
-    padding:5px 5px 5px 5px;
-    margin:0 -1px 5px -1px;
-}
-
-#tool input[type=text],
-.twitter-typeahead{
-    vertical-align:middle;
-    width:100%;
 }
 
 .tt-hint,
@@ -314,7 +322,7 @@ select{
     padding:0 2px 0px 2px;
 }
 
-.tt-suggestion .tt-text {
+.tt-suggestion .tt-text{
     margin:0;
     padding-left:10px;
     padding-right:2px;
@@ -327,54 +335,44 @@ select{
 .highlight {}
 
 #filter{
-    margin:0px 0px 0px 0px;
+/* always floated left, no matter the viewport width */
     clear:left;
+    margin:0px 0px 0px 0px;
 }
 
 #filter ul{
     margin:0;
     padding:0;
     list-style-type:none;
-    text-align:left;
-    text-transform:none;
 }
 
 #filter li{ /* using float to also get rid of the line-feed space between button tags */
     float:left;
     height:20px;
     min-width:14px;
-    padding:2px 5px 2px 5px;
+    padding:3px 5px 1px 5px; /* frag!? why 2px diff FF vs Opera vs webkit ??? */
     margin:2px 4px 2px 0px;
     cursor:pointer;
-    text-align:center;
 }
 
-#letters {
-    clear:both;
+#letters{
+/* float left if enough width */
+    float:left;
 }
 
-#letters ul {
+#letters ul{
     margin:0;
     padding:0;
     list-style-type:none;
-    text-align:center;
 }
 
-#letters li {
+#letters li{
     float:left;
     height:20px;
     width:20px;
-    padding:2px 2px 2px 2px;
+    padding:3px 2px 1px 2px;
     margin:2px 4px 2px 0px;
     text-align:center;
-    cursor:pointer;
-}
-
-.sb{
-    float:left;
-    height:26px;
-    padding:0px 0.5em 0px 0.5em;
-    margin:2px 4px 2px 0px;
     cursor:pointer;
 }
 
@@ -395,7 +393,7 @@ select{
     border-left:thick solid red;
     border-right:thick solid red;
 */
-font-weight:light;
+    font-weight:light;
 }
 
 .filter-exclude::after {
@@ -719,8 +717,6 @@ header, .header{ min-height:48px; }
 .headcenter{ height:48px; }
 .hicon64{ font-size:48px; line-height:48px; width:48px; height:48px; }
 h1{ font-size:1.3em; }
-#filter { clear:left; }
-#letters { clear:both; }
 .container{ width:auto;margin:0; }
 .searchForm{ float:none; width:99%; padding-left:2px; }
 section .bookpopup{ margin-left:10px; margin-right:10px; }
@@ -765,6 +761,7 @@ body{ margin:5px;
       /*font-weight:400; */ /* Better supported than 'lighter' attribute */ /* eh...lighter is 300 */
     }
 header, .header{ min-height:70px; }
+.header { height:70px; }
 .headcenter { height:64px; }
 .hicon64{ font-size:64px; line-height:64px; width:64px; height:64px; }
 h1{ font-size:1.8em; line-height:1.2em; }
@@ -797,7 +794,7 @@ body{
 /*    font-size:0.9em;*/
     font-weight:400; /* Better supported than 'lighter' attribute */ /* eh...lighter is 300 */
     }
-#filter { clear:none; }
+div.searchForm{ width:155px; }
 h1{ font-size:2.0em; line-height:1.2em; }
 article.catlibs, article.books { width:30.5%; }
 }
@@ -820,7 +817,6 @@ article.catlibs, article.books { width:23.2%; }
 /* 1800px and greater */ /* ... in landscape mode */
 @media only screen and (min-width:1800px){
 article.catlibs, article.books { width:18.5%; }
-#letters { clear:none; }
 }
 /*----------------------------------------------------------------------------*/
 
@@ -830,7 +826,7 @@ article.catlibs, article.books { width:18.5%; }
 .hidden{ visibility:hidden; }
 
 /*
-titlesort	h2 span .oksort
+titlesort   h2 span .oksort
 title       h2 span .nosort
 authorsort  div span .oksort
 authorname  div span .nosort
@@ -843,10 +839,10 @@ div > .oksort {
 }
 
 /* ==========================================================================
-   Background, Shadow, Border Rounding, Font Color definition stuff goes here
+   Background, Shadow, Border Rounding, Font Colors and the like goes here
    ========================================================================== */
 body{
-    color: #000;
+    color: rgb(0, 0, 0);
 }
 
 a,
@@ -856,8 +852,8 @@ a:active{ color:#313131; }
 a:visited{ color:#313131; } /* prevents security measure from kicking in since visited only allows color change */
 
 img {
-/*	don't make the alt text show */
-	color:transparent !important;
+/*  don't make the alt text show */
+    color:transparent !important;
 }
 .container{
     border:1px solid rgb(57, 50, 43);
@@ -885,18 +881,24 @@ header{
     border:1px solid rgb(57, 50, 43);
     background-color:rgb(57, 50, 43);
     color:rgb(246, 243, 233);
-    opacity:0.6;
+    opacity:0.5;
+}
+
+.sb.selected,
+.letter-selected {
+    opacity:0.8;
 }
 
 li.clear {
-    opacity:0.7;
+    opacity:0.8;
 }
 
 .filter-include {
-    opacity:0.9;
+    opacity:0.8;
 }
 .filter-exclude {
-    opacity:0.3;
+    opacity:0.2;
+    color:rgb(255, 255, 255);
 }
 
 .hicon{
@@ -1024,10 +1026,7 @@ footer{
 .highlight1,
 .highlight2 { background-color:#FFFF00; }
 
-.tooltip {
-    color: #4E4E4E;
-    background: #C4E424;
-}
+.tooltip { }
 /*
     background-color:rgb(246, 243, 233);
     background-color:rgb(230, 227, 217);

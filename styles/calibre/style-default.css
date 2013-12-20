@@ -22,7 +22,7 @@ h4{
    Main container stuff and other globals goes here
    ========================================================================== */
 .container {
-/*    box-shadow:0px 5px 5px rgb(57, 50, 43);*/
+    box-shadow:0px 5px 5px rgb(57, 50, 43);
 }
 
 /* ==========================================================================
@@ -36,12 +36,12 @@ header {
 
 .header {
     margin-bottom:8px;
-    box-shadow:0px 0px 3px rgb(86, 82, 75);
+    box-shadow:0px 5px 5px rgb(86, 82, 75);
 }
 
 #tool {
     padding-top:0;
-    box-shadow:0px 3px 3px rgb(86, 82, 75);
+    box-shadow:0px 5px 5px rgb(86, 82, 75);
 }
 /* ==========================================================================
    Section and Article stuff goes here

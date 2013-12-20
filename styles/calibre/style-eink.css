@@ -17,12 +17,22 @@ h2 {
 .hicon {
     color:rgb(224, 224, 224);
 }
+
+.sort,
+.search,
+.submit{
+/*    background-image:none;*/
+    border:none;
+    background-color:transparent;
+    color:rgb(32, 32, 32);
+}
+
 /* ==========================================================================
    Main container stuff goes here and other globals
    ========================================================================== */
 .container {
     border-color:rgb(0, 0, 0);
-    background-color:#000;
+    background-color:rgb(0, 0, 0);
     box-shadow:0px 5px 5px rgb(32, 32, 32);
 }
 
@@ -51,14 +61,13 @@ header {
                  1px -1px rgb(127, 127, 127)
                  ;
 }
+
 #tool{
     background-color:rgb(224, 224, 224);
 }
 
-
-.sb, li, li.clear {
-    background-color:#000;
-    opacity:0.9;
+.sb, li.clear {
+    background-color:rgb(0, 0, 0);
 }
 
 /* =============================================================================
@@ -121,7 +130,7 @@ article.books {
 }
 
 .download a {
-    background-color:#000;
+    background-color:rgb(0, 0, 0);
 }
 
 .download a:hover{
@@ -143,7 +152,7 @@ section .bookpopup{
 }
 /*------------------footer stuf----------------*/
 footer {
-    background-color:#000;
+    background-color:rgb(0, 0, 0);
 }
 
 .footcenter {

@@ -595,7 +595,6 @@ where data.book = books.id and data.id = ?');
     }
 
     public static function getBooksByQuery($query, $n, $database = NULL, $numberPerPage = NULL) {
-        global $config;
         $i = 0;
         $critArray = array ();
         foreach (array (PageQueryResult::SCOPE_AUTHOR,

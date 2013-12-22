@@ -589,7 +589,7 @@ class PageAllPublishers extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("publisher.title");
+        $this->title = localize("publishers.title");
         $this->entryArray = Publisher::getAllPublishers();
         $this->idPage = Publisher::ALL_PUBLISHERS_ID;
     }
@@ -838,64 +838,65 @@ class PageAbout extends Page
 
 class PageCustomize extends Page
 {
+    private function isChecked ($key, $testedValue = 1) {
+        $value = getCurrentOption ($key);
+        if (is_array ($value)) {
+            if (in_array ($testedValue, $value)) {
+                return "checked='checked'";
+            }
+        } else {
+            if ($value == $testedValue) {
+                return "checked='checked'";
+            }
+        }
+        return "";
+    }
+
+    private function isSelected ($key, $value) {
+        if (getCurrentOption ($key) == $value) {
+            return "selected='selected'";
+        }
+        return "";
+    }
+
+    private function getStyleList () {
+        $result = array ();
+        foreach (glob ("styles/style-*.css") as $filename) {
+            if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
+                array_push ($result, $m [1]);
+            }
+        }
+        return $result;
+    }
+
     public function InitializeContent ()
     {
         $this->title = localize ("customize.title");
         $this->entryArray = array ();
 
-        $use_fancybox = "";
-        if (getCurrentOption ("use_fancyapps") == 1) {
-            $use_fancybox = "checked='checked'";
-        }
-        $html_tag_filter = "";
-        if (getCurrentOption ("html_tag_filter") == 1) {
-            $html_tag_filter = "checked='checked'";
-        }
-        
-        $ignored_categories = array ();
         $ignoredBaseArray = array (PageQueryResult::SCOPE_AUTHOR,
                                    PageQueryResult::SCOPE_TAG,
                                    PageQueryResult::SCOPE_SERIES,
                                    PageQueryResult::SCOPE_PUBLISHER,
                                    "language");
-        foreach ($ignoredBaseArray as $key) {
-            if (in_array ($key, getCurrentOption ('ignored_categories'))) {
-                $ignored_categories [$key] = "checked='checked'";
-            } else {
-                $ignored_categories [$key] = "";
-            }
-        }
 
         $content = "";
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '<select id="style" onchange="updateCookie (this);">';
-        }
-            foreach (glob ("styles/style-*.css") as $filename) {
-                if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
-                    $filename = $m [1];
-                }
-                $selected = "";
-                if (getCurrentOption ("style") == $filename) {
-                    if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
-                        $selected = "selected='selected'";
-                    } else {
-                        $selected = "checked='checked'";
-                    }
-                }
-                if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
-                    $content .= "<option value='{$filename}' {$selected}>{$filename}</option>";
-                } else {
-                    $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' {$selected} /><label for='style-{$filename}'> {$filename} </label>";
-                }
+            foreach ($this-> getStyleList () as $filename) {
+                $content .= "<option value='{$filename}' " . $this->isSelected ("style", $filename) . ">{$filename}</option>";
             }
-        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '</select>';
+        } else {
+            foreach ($this-> getStyleList () as $filename) {
+                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' " . $this->isChecked ("style", $filename) . " /><label for='style-{$filename}'> {$filename} </label>";
+            }
         }
         array_push ($this->entryArray, new Entry (localize ("customize.style"), "",
                                         $content, "text",
                                         array ()));
         if (!useServerSideRendering ()) {
-            $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $use_fancybox . ' />';
+            $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $this->isChecked ("use_fancyapps") . ' />';
             array_push ($this->entryArray, new Entry (localize ("customize.fancybox"), "",
                                             $content, "text",
                                             array ()));
@@ -908,14 +909,14 @@ class PageCustomize extends Page
         array_push ($this->entryArray, new Entry (localize ("customize.email"), "",
                                         $content, "text",
                                         array ()));
-        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" ' . $html_tag_filter . ' />';
+        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" ' . $this->isChecked ("html_tag_filter") . ' />';
         array_push ($this->entryArray, new Entry (localize ("customize.filter"), "",
                                         $content, "text",
                                         array ()));
         $content = "";
         foreach ($ignoredBaseArray as $key) {
             $keyPlural = preg_replace ('/(ss)$/', 's', $key . "s");
-            $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $key . '" ' . $ignored_categories [$key] . ' > ' . localize ("{$keyPlural}.title") . '</input> ';
+            $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $key . '" ' . $this->isChecked ("ignored_categories", $key) . ' > ' . localize ("{$keyPlural}.title") . '</input> ';
         }
 
         array_push ($this->entryArray, new Entry (localize ("customize.ignored"), "",
@@ -960,7 +961,7 @@ abstract class Base
         global $config;
         return is_array ($config['calibre_directory']);
     }
-    
+
     public static function noDatabaseSelected () {
         return self::isMultipleDatabaseEnabled () && is_null (GetUrlParam (DB));
     }
@@ -973,7 +974,7 @@ abstract class Base
             return array ("" => $config['calibre_directory']);
         }
     }
-    
+
     public static function getDbNameList () {
         global $config;
         if (self::isMultipleDatabaseEnabled ()) {
@@ -1029,7 +1030,7 @@ abstract class Base
         }
         return self::$db;
     }
-    
+
     public static function checkDatabaseAvailability () {
         if (self::noDatabaseSelected ()) {
             for ($i = 0; $i < count (self::getDbList ()); $i++) {

@@ -545,7 +545,7 @@ class PageAllAuthors extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("authorword.title");
+        $this->title = localize("authors.title");
         if (getCurrentOption ("author_split_first_letter") == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();
         }
@@ -581,7 +581,7 @@ class PageAllPublishers extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("publisherword.title");
+        $this->title = localize("publishers.title");
         $this->entryArray = Publisher::getAllPublishers();
         $this->idPage = Publisher::ALL_PUBLISHERS_ID;
     }
@@ -602,7 +602,7 @@ class PageAllTags extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("tagword.title");
+        $this->title = localize("tags.title");
         $this->entryArray = Tag::getAllTags();
         $this->idPage = Tag::ALL_TAGS_ID;
     }
@@ -667,7 +667,7 @@ class PageAllSeries extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("seriesword.title");
+        $this->title = localize("series.title");
         $this->entryArray = Serie::getAllSeries();
         $this->idPage = Serie::ALL_SERIES_ID;
     }
@@ -758,19 +758,17 @@ class PageQueryResult extends Page
 // across libraries search
         $crit = "%" . $this->query . "%";
 
-        $dbArray = array ("");
-        $d = $database; 
+        $d = $database;
 
         // Special case when no databases were chosen, we search on all databases
         if (Base::noDatabaseSelected ()) {
-            $dbArray = Base::getDbNameList ();
             $d = 0;
 
-            foreach ($dbArray as $key) {
+            foreach (Base::getDbNameList () as $key) {
                 Base::clearDb ();
                 $nBooks = Book::getBookCount ($d);
                 // needs safeguarding for empty db
-                if ($nBooks > 0) { 
+                if ($nBooks > 0) {
 // consider refactoring getBooksByQuery into this class and make it a separate Search class
                     list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $d, 1);
                     array_push ($this->entryArray, new Entry ($key, DB . ":query:{$d}",
@@ -806,40 +804,34 @@ class PageQueryResult extends Page
     }
 
     private function doSearch ($query, $database) {
-        global $config;
 
         if (Base::noDatabaseSelected ()) {
             // clear whichever may be the current library if multi-library searching
             Base::clearDb();
+            $searchdb = null;
         }
         // otherwise use the current library.
-        $searchdb = null;
-        $nBooks = 0;
         $searchdb = Base::getDb($database);
+        $nBooks = 0;
         // in case we get an error in the db, but then we're likely not getting this far.
         if (!is_null ($searchdb)) {
             $nBooks = Book::getBookCount ($database);
         }
         elseif ((is_null ($searchdb)) || ($nBooks == 0))
         {   // safeguard against empty (if not wanting to show), non-existing or off-line database
-            return array (-1, 0, 0, 0, 0, 0);
+            return array (-1, null, null, null, null, null);
         }
 
-        if (!in_array ("book", $config ['cops_ignored_search_scope'])) {
-            $arrayBook = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
-        }
-        if (!in_array ("author", $config ['cops_ignored_search_scope'])) {
-            $arrayAuthor = Author::getAuthorsByStartingLetter ('%' . $query);
-        }
-        if (!in_array ("series", $config ['cops_ignored_search_scope'])) {
-            $arraySeries = Serie::getAllSeriesByQuery ($query);
-        }
-        if (!in_array ("tag", $config ['cops_ignored_search_scope'])) {
-            $arrayTag = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
-        }
-        if (!in_array ("publisher", $config ['cops_ignored_search_scope'])) {
-            $arrayPublisher = Publisher::getAllPublishersByQuery ($query);
-        }
+        $arrayBook = (!in_array ("book", getCurrentOption ("ignored_search_scope")))
+                     ? Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5) : null;
+        $arrayAuthor = (!in_array ("author", getCurrentOption ("ignored_search_scope")))
+                     ? Author::getAuthorsByStartingLetter ('%' . $query) : null;
+        $arraySeries = (!in_array ("series", getCurrentOption ("ignored_search_scope")))
+                     ? Serie::getAllSeriesByQuery ($query) : null;
+        $arrayTag =  (!in_array ("tag", getCurrentOption ("ignored_search_scope")))
+                     ? Tag::getAllTagsByQuery ($query, 1, NULL, 5) : null;
+        $arrayPublisher = (!in_array ("publisher", getCurrentOption ("ignored_search_scope")))
+                     ? Publisher::getAllPublishersByQuery ($query) : null;
         $overalTotal = ((count ($arrayBook) == 2 && is_array ($arrayBook[0])) ? $arrayBook[1] : 0)
                      + count ($arrayAuthor)
                      + count ($arraySeries)
@@ -862,22 +854,21 @@ class PageQueryResult extends Page
     // entries that were no longer referenced as a result of the refactoring, have been removed.
     public function executeSearch($pagequery, $query, $database, $submitted = FALSE) {
 
+        $d = $database;
         $havedb = true;
         $dbCount = 1;
+
         $entryArray = array ();
 
-        $dbArray = array ("");
-        $d = $database; 
 
         // Special case when no databases were chosen, we search on all databases
         if (Base::noDatabaseSelected ()) {
-            $dbArray = Base::getDbNameList ();
             $d = 0;
             $havedb = false;
-            $dbCount = count ($dbArray);
+            $dbCount = count (Base::getDbNameList ());
         }
 
-        foreach ($dbArray as $dbkey) {
+        foreach (Base::getDbNameList () as $dbkey) {
 
             $overalTotal = self::doSearch ($query, $d);
             // only if there's something to process
@@ -894,7 +885,7 @@ class PageQueryResult extends Page
                                 "series" => $overalTotal[3],
                                 "tag" => $overalTotal[4],
                                 "publisher" => $overalTotal[5]) as $key => $array) {
-
+                    if (in_array ($key, getCurrentOption ("ignored_search_scope"))) { continue; }
                     // array for use in submitted search
                     $pages = array(
                                 "book" => Book::ALL_BOOKS_ID,
@@ -918,7 +909,8 @@ class PageQueryResult extends Page
                         // str_format (localize("tagword", count($array))
                         // str_format (localize("publisherword", count($array))
                         if ($submitted) {
-                            array_push ($entryArray, new Entry (localize ("{$key}word.title"), $pages[$key],
+                            $keyPlural = preg_replace ('/(ss)$/', 's', $key . "s");
+                            array_push ($entryArray, new Entry (localize ("{$keyPlural}.title"), $pages[$key],
                                         str_format (localize ("{$key}word", $total), $total), "text",
                                         array ( new LinkNavigation ("?page={$pagequery}&query={$query}&db={$d}&scope={$key}"))));
                         }

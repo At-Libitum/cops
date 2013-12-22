@@ -30,7 +30,7 @@ class Publisher extends Base {
     public static function getCount() {
         $nPublishers = parent::getDb ()->query('select count(*) from publishers')->fetchColumn();
         if ($nPublishers == 0) return NULL;
-        $entry = new Entry (localize("publisherword.title"), self::ALL_PUBLISHERS_ID,
+        $entry = new Entry (localize("publishers.title"), self::ALL_PUBLISHERS_ID,
             str_format (localize("publishers.alphabetical", $nPublishers), $nPublishers), "text",
             array ( new LinkNavigation ("?page=".parent::PAGE_ALL_PUBLISHERS)));
         return $entry;

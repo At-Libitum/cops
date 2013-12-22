@@ -791,10 +791,10 @@ function getJson ($complete = false) {
     if (!is_null (getURLParam ("complete")) || $complete) {
         $out ["c"] = array ("version" => VERSION, "i18n" => array (
                        "coverAlt" => localize("i18n.coversection"),
-                       "authorsTitle" => localize("authorword.title"),
+                       "authorsTitle" => localize("authors.title"),
                        "bookwordTitle" => localize("bookword.title"),
-                       "tagsTitle" => localize("tagword.title"),
-                       "seriesTitle" => localize("seriesword.title"),
+                       "tagsTitle" => localize("tags.title"),
+                       "seriesTitle" => localize("series.title"),
                        "customizeTitle" => localize ("customize.title"),
                        "aboutTitle" => localize ("about.title"),
                        "previousAlt" => localize ("paging.previous.alternate"),

@@ -620,8 +620,8 @@ where data.book = books.id and data.id = ?');
                     $critArray [$i] = $query [$key];
                 } else {
                     $critArray [$i] = $query ["all"];
-            }
                 }
+            }
             $i++;
         }
         return self::getEntryArray (self::SQL_BOOKS_QUERY, $critArray, $n, $database, $numberPerPage);

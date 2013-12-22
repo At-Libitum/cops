@@ -236,8 +236,14 @@ function handleFilterEvents () {
                 delete filterList [filter];
                 break;
             default :
-                $(this).attr("class", "filter-include");
-                filterList [filter] = true;
+                if (event.altKey) {
+                    $(this).attr("class", "filter-exclude");
+                    filterList [filter] = false;
+                }
+                else {
+                    $(this).attr("class", "filter-include");
+                    filterList [filter] = true;
+                }
                 break;
         }
         doFilter ();
@@ -396,13 +402,21 @@ function handleLinks () {
     });
     $("body").on ("click", "button.sb", function(event){
         var bid = event.target.id;
-        for (i=1;i<=4;i++)
-        {
-            if (!$("#isb"+i).hasClass("hidden"))
-            {
-                $("#isb"+i).addClass(" hidden");
+        // only change classes if the clicked is not the current selected
+        if ($("#i"+bid).hasClass("hidden"))
+        { // wait with showing arrow until the current visible one is hidden
+            for (i=1;i<=4;i++)
+            { // only do something with the current and clicked
+                if (("sb"+i != bid) && (!$("#isb"+i).hasClass("hidden")))
+                {
+                    // current
+                    $("#sb"+i).removeClass("selected"); // remove highlight
+                    $("#isb"+i).addClass(" hidden");  // hide arrow
+                    // clicked
+                    $("#i"+bid).removeClass("hidden"); // unhide arrow
+                    $("#"+bid).addClass("selected");  // add highlight
+                }
             }
-            $("#i"+bid).removeClass("hidden");
         }
         if ($("#i"+bid).hasClass("icon-long-arrow-up"))
         {   // arrow up: ascending - arrow down: descending
@@ -420,7 +434,7 @@ function handleLinks () {
             }
             // convert both strings to uppercase because sorting is case sensitive unlike in Calibre
             //TODO: Make it so it sorts accented characters with non-accented equivalents.
-            //TODO: Make it so it sorts numbers numerical instead of lettersical
+            //TODO: Make it so it sorts numbers numerical instead of alphabetical
             return $(a).find ("." + event.target.value ).text().toUpperCase() > $(b).find ("." + event.target.value ).text().toUpperCase() ? test : -test;
         });
     });

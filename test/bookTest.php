@@ -280,10 +280,10 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath ("epub", 20, true));
         $this->assertEquals ("Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath ("mobi", 17, true));
     }
-    
+
     public function testGetDataFormat () {
         $book = Book::getBookById(17);
-        
+
         // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $data = $book->getDataFormat ("EPUB");
         $this->assertEquals (20, $data->id);
@@ -291,12 +291,13 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals (17, $data->id);
         $data = $book->getDataFormat ("PDF");
         $this->assertEquals (19, $data->id);
-        
+
         $this->assertNull ($book->getDataFormat ("FB2"));
     }
 
     public function testTypeaheadSearch ()
     {
+        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
         $_GET["query"] = "fic";
         $_GET["search"] = "1";
 
@@ -343,9 +344,39 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["search"] = NULL;
     }
 
+    public function testTypeaheadSearchWithIgnored ()
+    {
+        global $config;
+        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
+        $_GET["query"] = "car";
+        $_GET["search"] = "1";
+
+        $config ['cops_ignored_categories'] = array ("author");
+        $array = getJson ();
+
+        $this->assertCount (2, $array);
+        $this->assertEquals ("1 book", $array[0]["title"]);
+        $this->assertEquals ("A Study in Scarlet", $array[1]["title"]);
+
+
+        $_GET["query"] = "art";
+        $_GET["search"] = "1";
+
+        $config ['cops_ignored_categories'] = array ("series");
+        $array = getJson ();
+
+        $this->assertCount (2, $array);
+        $this->assertEquals ("1 author", $array[0]["title"]);
+        $this->assertEquals ("Doyle, Arthur Conan", $array[1]["title"]);
+
+        $_GET["query"] = NULL;
+        $_GET["search"] = NULL;
+    }
+
     public function testTypeaheadSearchMultiDatabase ()
     {
         global $config;
+        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
         $_GET["query"] = "art";
         $_GET["search"] = "1";
         $_GET["multi"] = "1";
